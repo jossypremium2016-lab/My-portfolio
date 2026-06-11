@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Portfolio - Windows 11</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font: Segoe UI Variable from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Fluent UI Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@fluentui/svg-icons/lib/svg-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="win11.css">
+</head>
+<body>
+    <!-- BOOT SCREEN -->
+    <div id="bootScreen" class="boot-screen">
+        <div class="boot-wallpaper"></div>
+        <div class="boot-content">
+            <div class="boot-logo">🪟</div>
+            <div class="boot-spinner"></div>
+        </div>
+    </div>
+
+    <!-- LOCK SCREEN -->
+    <div id="lockScreen" class="lock-screen hidden">
+        <div class="lock-wallpaper"></div>
+        <div class="lock-content">
+            <div class="lock-time">
+                <div class="lock-time-display"></div>
+                <div class="lock-date-display"></div>
+            </div>
+            <div class="lock-hint">Press any key or click to unlock</div>
+        </div>
+    </div>
+
+    <!-- DESKTOP ENVIRONMENT -->
+    <div id="desktopEnvironment" class="desktop-environment hidden">
+        
+        <!-- Desktop Wallpaper -->
+        <div class="desktop-wallpaper"></div>
+
+        <!-- Desktop Icons -->
+        <div class="desktop-icons-container">
+            <div class="desktop-icon" data-app="projects" title="Projects">
+                <div class="desktop-icon-image">📁</div>
+                <div class="desktop-icon-label">Projects</div>
+            </div>
+            <div class="desktop-icon" data-app="about" title="About Me">
+                <div class="desktop-icon-image">⚙️</div>
+                <div class="desktop-icon-label">About Me</div>
+            </div>
+            <div class="desktop-icon" data-app="skills" title="Skills">
+                <div class="desktop-icon-image">💻</div>
+                <div class="desktop-icon-label">Terminal</div>
+            </div>
+            <div class="desktop-icon" data-app="contact" title="Contact">
+                <div class="desktop-icon-image">📧</div>
+                <div class="desktop-icon-label">Contact</div>
+            </div>
+            <div class="desktop-icon" data-app="resume" title="Resume">
+                <div class="desktop-icon-image">📄</div>
+                <div class="desktop-icon-label">Resume</div>
+            </div>
+            <div class="desktop-icon" data-app="gallery" title="Gallery">
+                <div class="desktop-icon-image">🖼️</div>
+                <div class="desktop-icon-label">Gallery</div>
+            </div>
+            <div id="adminIcon" class="desktop-icon admin-hidden" data-app="admin" title="Admin Panel">
+                <div class="desktop-icon-image">🔐</div>
+                <div class="desktop-icon-label">Admin</div>
+            </div>
+        </div>
+
+        <!-- Context Menu -->
+        <div id="contextMenu" class="context-menu hidden">
+            <div class="context-menu-item" data-action="refresh">🔄 Refresh</div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" data-action="view-projects">📁 View Projects</div>
+            <div class="context-menu-item" data-action="about">ℹ️ About Me</div>
+            <div class="context-menu-item" data-action="contact">📧 Contact</div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" data-action="change-wallpaper">🎨 Change Wallpaper</div>
+            <div class="context-menu-item" data-action="personalize">⚙️ Personalize</div>
+        </div>
+
+        <!-- TASKBAR -->
+        <div id="taskbar" class="taskbar">
+            <div class="taskbar-content">
+                <!-- Start Button -->
+                <button id="startButton" class="taskbar-start-button" title="Start">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="4" y="4" width="7" height="7"/>
+                        <rect x="13" y="4" width="7" height="7"/>
+                        <rect x="4" y="13" width="7" height="7"/>
+                        <rect x="13" y="13" width="7" height="7"/>
+                    </svg>
+                </button>
+
+                <!-- Search Bar -->
+                <div class="taskbar-search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="taskbarSearch" placeholder="Search..." class="taskbar-search-input">
+                </div>
+
+                <!-- Open Apps (center) -->
+                <div class="taskbar-apps-center">
+                    <div id="taskbarAppsList" class="taskbar-apps-list"></div>
+                </div>
+
+                <!-- System Tray (right) -->
+                <div class="taskbar-system-tray">
+                    <div class="system-tray-item" id="wifiIcon" title="Network">
+                        📡
+                    </div>
+                    <div class="system-tray-item" id="volumeIcon" title="Volume">
+                        🔊
+                    </div>
+                    <div class="system-tray-item" id="batteryIcon" title="Battery">
+                        🔋
+                    </div>
+                    <div class="system-tray-item" id="notificationBell" title="Notifications">
+                        🔔
+                    </div>
+                    <div class="system-tray-divider"></div>
+                    <div class="system-tray-item" id="clockDisplay" title="Date and time settings">
+                        00:00
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- START MENU -->
+        <div id="startMenu" class="start-menu hidden">
+            <div class="start-menu-content">
+                <!-- Start Menu Header -->
+                <div class="start-menu-header">
+                    <input type="text" id="startMenuSearch" class="start-menu-search" placeholder="Type here to search">
+                </div>
+
+                <!-- Pinned Apps -->
+                <div class="start-menu-section">
+                    <div class="start-menu-label">Pinned</div>
+                    <div class="start-menu-apps" id="pinnedApps">
+                        <div class="start-menu-app-item" data-app="projects">
+                            <div class="start-menu-app-icon">📁</div>
+                            <div class="start-menu-app-name">File Explorer</div>
+                        </div>
+                        <div class="start-menu-app-item" data-app="about">
+                            <div class="start-menu-app-icon">⚙️</div>
+                            <div class="start-menu-app-name">Settings</div>
+                        </div>
+                        <div class="start-menu-app-item" data-app="skills">
+                            <div class="start-menu-app-icon">💻</div>
+                            <div class="start-menu-app-name">Terminal</div>
+                        </div>
+                        <div class="start-menu-app-item" data-app="contact">
+                            <div class="start-menu-app-icon">🌐</div>
+                            <div class="start-menu-app-name">Edge</div>
+                        </div>
+                        <div class="start-menu-app-item" data-app="resume">
+                            <div class="start-menu-app-icon">📄</div>
+                            <div class="start-menu-app-name">Notepad</div>
+                        </div>
+                        <div class="start-menu-app-item" data-app="gallery">
+                            <div class="start-menu-app-icon">🖼️</div>
+                            <div class="start-menu-app-name">Photos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended / Recent Projects -->
+                <div class="start-menu-section">
+                    <div class="start-menu-label">Recommended</div>
+                    <div id="startMenuRecommended" class="start-menu-recommended"></div>
+                </div>
+
+                <!-- Start Menu Footer -->
+                <div class="start-menu-footer">
+                    <button id="powerButton" class="start-menu-power-button" title="Power">
+                        ⏻️
+                    </button>
+                    <button id="settingsButton" class="start-menu-settings-button" title="Settings">
+                        ⚙️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS PANEL -->
+        <div id="notificationsPanel" class="notifications-panel hidden">
+            <div class="notifications-header">Notifications</div>
+            <div id="notificationsList" class="notifications-list"></div>
+        </div>
+
+        <!-- WINDOWS CONTAINER -->
+        <div id="windowsContainer" class="windows-container"></div>
+    </div>
+
+    <!-- ============ WINDOW TEMPLATES ============ -->
+
+    <!-- FILE EXPLORER WINDOW -->
+    <template id="fileExplorerTemplate">
+        <div class="win11-window" data-window="projects">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                    </svg>
+                    <span class="window-title">File Explorer</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="file-explorer-toolbar">
+                    <button class="toolbar-btn" id="explorerBack" title="Back">←</button>
+                    <button class="toolbar-btn" id="explorerForward" title="Forward">→</button>
+                    <div class="toolbar-search-box">
+                        <input type="text" placeholder="Search projects..." class="toolbar-search">
+                    </div>
+                    <div class="toolbar-spacer"></div>
+                    <select id="explorerViewToggle" class="toolbar-select">
+                        <option value="grid">Grid View</option>
+                        <option value="list">List View</option>
+                        <option value="details">Details View</option>
+                    </select>
+                    <select id="explorerSort" class="toolbar-select">
+                        <option value="date">Sort by Date</option>
+                        <option value="name">Sort by Name</option>
+                        <option value="category">Sort by Category</option>
+                    </select>
+                </div>
+                <div class="file-explorer-body">
+                    <div class="file-explorer-sidebar">
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Categories</div>
+                            <div class="sidebar-item active" data-category="all">All Projects</div>
+                            <div class="sidebar-item" data-category="web">Web Apps</div>
+                            <div class="sidebar-item" data-category="mobile">Mobile</div>
+                            <div class="sidebar-item" data-category="open-source">Open Source</div>
+                            <div class="sidebar-item" data-category="tools">Tools</div>
+                        </div>
+                    </div>
+                    <div class="file-explorer-main">
+                        <div id="projectsGrid" class="projects-grid grid-view"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- SETTINGS WINDOW -->
+    <template id="settingsTemplate">
+        <div class="win11-window" data-window="about">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="1"/><path d="M12 19v-1m0-14V2M5.64 5.64l.71.71M17.66 17.66l.71.71M5 12H4m16 0h-1M5.64 18.36l.71-.71M17.66 6.34l.71-.71"/>
+                    </svg>
+                    <span class="window-title">Settings</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="settings-container">
+                    <div class="settings-sidebar">
+                        <div class="settings-section-title">About Me</div>
+                        <div class="settings-nav-item active" data-section="general">General</div>
+                        <div class="settings-nav-item" data-section="experience">Experience</div>
+                        <div class="settings-nav-item" data-section="education">Education</div>
+                        <div class="settings-nav-item" data-section="skills">Skills</div>
+                        <div class="settings-nav-item" data-section="achievements">Achievements</div>
+                    </div>
+                    <div class="settings-main">
+                        <div id="settingsContent" class="settings-content">
+                            <!-- Content loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- TERMINAL WINDOW -->
+    <template id="terminalTemplate">
+        <div class="win11-window" data-window="skills">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 6h16v2H4V6m0 5h16v2H4v-2m0 5h16v2H4v-2"/>
+                    </svg>
+                    <span class="window-title">Terminal</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content terminal-content">
+                <div id="terminalOutput" class="terminal-output"></div>
+                <div class="terminal-input-line">
+                    <span class="terminal-prompt">C:\Users\Developer&gt; </span>
+                    <input type="text" id="terminalInput" class="terminal-input" autocomplete="off">
+                    <span class="terminal-cursor">|</span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- EDGE BROWSER WINDOW -->
+    <template id="edgeTemplate">
+        <div class="win11-window" data-window="contact">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                    </svg>
+                    <span class="window-title">Edge</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="browser-toolbar">
+                    <button class="browser-btn">←</button>
+                    <button class="browser-btn">→</button>
+                    <button class="browser-btn">⟳</button>
+                    <div class="browser-address-bar">
+                        <span class="browser-url-prefix">https://</span>
+                        <input type="text" class="browser-url-input" value="portfolio.local/contact">
+                    </div>
+                </div>
+                <div class="browser-content">
+                    <div id="contactForm" class="contact-form-container">
+                        <form id="contactFormElement" class="contact-form">
+                            <h3>Contact Me</h3>
+                            <div class="form-group">
+                                <label for="contactName">Name</label>
+                                <input type="text" id="contactName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Message</label>
+                                <textarea id="contactMessage" class="form-control" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                        <div id="contactTabs" class="browser-tabs">
+                            <div class="browser-tab">Contact Form</div>
+                            <div class="browser-tab" data-link="https://linkedin.com">LinkedIn</div>
+                            <div class="browser-tab" data-link="https://github.com">GitHub</div>
+                            <div class="browser-tab" data-link="https://twitter.com">Twitter</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- PHOTOS WINDOW -->
+    <template id="photosTemplate">
+        <div class="win11-window" data-window="gallery">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                    <span class="window-title">Photos</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div id="galleryGrid" class="gallery-grid"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- NOTEPAD WINDOW -->
+    <template id="notepadTemplate">
+        <div class="win11-window" data-window="resume">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                    </svg>
+                    <span class="window-title">Resume</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content notepad-content">
+                <div class="notepad-toolbar">
+                    <button id="printResume" class="notepad-btn">Print / Download PDF</button>
+                </div>
+                <div id="resumeContent" class="resume-text-area"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ADMIN LOGIN WINDOW -->
+    <template id="adminLoginTemplate">
+        <div class="win11-window" data-window="admin">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                    </svg>
+                    <span class="window-title">Admin Panel</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content admin-content">
+                <div id="adminLoginForm" class="admin-login-form">
+                    <h3>Admin Login</h3>
+                    <input type="email" id="adminEmail" placeholder="Email" class="form-control" required>
+                    <input type="password" id="adminPassword" placeholder="Password" class="form-control" required>
+                    <button id="adminLoginBtn" class="btn btn-primary">Login</button>
+                    <div id="adminError" class="alert alert-danger hidden"></div>
+                </div>
+                <div id="adminPanel" class="admin-panel hidden">
+                    <div class="admin-header">
+                        <h3>Manage Projects</h3>
+                        <button id="adminLogout" class="btn btn-sm btn-outline-danger">Logout</button>
+                    </div>
+                    <div class="admin-toolbar">
+                        <button id="addProjectBtn" class="btn btn-sm btn-success">+ Add Project</button>
+                    </div>
+                    <div id="projectsList" class="projects-list"></div>
+                </div>
+                <div id="adminProjectForm" class="admin-project-form hidden">
+                    <h4>Project Form</h4>
+                    <form id="projectFormElement">
+                        <input type="hidden" id="projectId">
+                        <input type="text" id="projectTitle" placeholder="Title" class="form-control" required>
+                        <textarea id="projectDescription" placeholder="Description" class="form-control" required></textarea>
+                        <input type="text" id="projectCategory" placeholder="Category" class="form-control">
+                        <input type="text" id="projectTech" placeholder="Tech Stack (comma-separated)" class="form-control">
+                        <input type="url" id="projectThumbnail" placeholder="Thumbnail URL" class="form-control">
+                        <input type="url" id="projectLiveUrl" placeholder="Live URL" class="form-control">
+                        <input type="url" id="projectGithubUrl" placeholder="GitHub URL" class="form-control">
+                        <label>
+                            <input type="checkbox" id="projectFeatured"> Featured
+                        </label>
+                        <button type="submit" class="btn btn-primary">Save Project</button>
+                        <button type="button" id="cancelProjectForm" class="btn btn-secondary">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- LIGHTBOX FOR GALLERY -->
+    <div id="lightbox" class="lightbox hidden">
+        <div class="lightbox-content">
+            <button class="lightbox-close">✕</button>
+            <button class="lightbox-prev">❮</button>
+            <img id="lightboxImage" src="" alt="">
+            <button class="lightbox-next">❯</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE CONFIGURATION -->
+    <script type="module">
+        // Your Firebase configuration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Initialize Firebase (configured)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGUXGB6E1nOgIUDGNqnqzYc_5Xa7aHwDM",
+            authDomain: "my-portfolio-7dbbb.firebaseapp.com",
+            projectId: "my-portfolio-7dbbb",
+            storageBucket: "my-portfolio-7dbbb.firebasestorage.app",
+            messagingSenderId: "746514592590",
+            appId: "1:746514592590:web:f44a00a8fc98b0f60a241f",
+            measurementId: "G-HHVD7FE42S"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+        window.auth = getAuth(app);
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Main Application Script -->
+    <script src="os.js" type="module"></script>
+</body>
+</html>

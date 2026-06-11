@@ -1,0 +1,1705 @@
+/* ============================================
+   WINDOWS 11 PORTFOLIO - STYLESHEET
+   ============================================ */
+
+/* Variables */
+:root {
+    --win11-blue: #0078D4;
+    --win11-light-blue: #1F97F5;
+    --win11-dark: #1E1E1E;
+    --win11-darkgray: #2D2D2D;
+    --win11-medgray: #3D3D3D;
+    --win11-lightgray: #F3F3F3;
+    --win11-white: #FFFFFF;
+    --acrylic-light: rgba(255, 255, 255, 0.85);
+    --acrylic-dark: rgba(29, 29, 29, 0.85);
+    --font-family: 'Segoe UI Variable', 'Segoe UI', sans-serif;
+    --transition-fast: 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-normal: 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-smooth: 500ms cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-family);
+    overflow: hidden;
+    background: #000;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================================
+   BOOT SCREEN
+   ============================================ */
+
+.boot-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    background: #000;
+}
+
+.boot-screen.hidden {
+    animation: bootFadeOut 1s ease-out forwards;
+}
+
+@keyframes bootFadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; pointer-events: none; }
+}
+
+.boot-wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    z-index: 1;
+}
+
+.boot-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.boot-logo {
+    font-size: 60px;
+    animation: bootLogoFloat 2s ease-in-out infinite;
+}
+
+@keyframes bootLogoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.boot-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   LOCK SCREEN
+   ============================================ */
+
+.lock-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    cursor: pointer;
+}
+
+.lock-screen.hidden {
+    animation: lockScreenSlideUp 600ms ease-out forwards;
+}
+
+@keyframes lockScreenSlideUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100%);
+        pointer-events: none;
+    }
+}
+
+.lock-wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    filter: blur(3px);
+    z-index: 1;
+}
+
+.lock-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+}
+
+.lock-time {
+    margin-bottom: 20px;
+}
+
+.lock-time-display {
+    font-size: 80px;
+    font-weight: 300;
+    line-height: 1;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+}
+
+.lock-date-display {
+    font-size: 20px;
+    font-weight: 400;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.lock-hint {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 30px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* ============================================
+   DESKTOP ENVIRONMENT
+   ============================================ */
+
+.desktop-environment {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.desktop-environment.hidden {
+    display: none;
+}
+
+.desktop-environment:not(.hidden) {
+    animation: desktopFadeIn 800ms ease-out;
+}
+
+@keyframes desktopFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.desktop-wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 0;
+    background-attachment: fixed;
+}
+
+.desktop-wallpaper.dark-mode {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+/* Desktop Icons */
+.desktop-icons-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 20px;
+    width: 200px;
+    z-index: 10;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+}
+
+.desktop-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.desktop-icon.admin-hidden {
+    display: none;
+}
+
+.desktop-icon-image {
+    font-size: 40px;
+    line-height: 1;
+}
+
+.desktop-icon-label {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    word-wrap: break-word;
+    font-weight: 500;
+}
+
+/* Context Menu */
+.context-menu {
+    position: fixed;
+    background: var(--acrylic-light);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    min-width: 200px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    overflow: hidden;
+}
+
+.context-menu.hidden {
+    display: none;
+}
+
+.context-menu-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.context-menu-item:hover {
+    background: rgba(0, 120, 212, 0.2);
+}
+
+.context-menu-divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   TASKBAR
+   ============================================ */
+
+.taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 58px;
+    background: var(--acrylic-dark);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.taskbar-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Start Button */
+.taskbar-start-button {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.taskbar-start-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.taskbar-start-button:active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.95);
+}
+
+/* Taskbar Search */
+.taskbar-search {
+    flex: 0 1 300px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition-fast);
+    margin: 0 10px;
+}
+
+.taskbar-search:focus-within {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--win11-blue);
+}
+
+.taskbar-search svg {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.taskbar-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 13px;
+    outline: none;
+}
+
+.taskbar-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Open Apps (Center) */
+.taskbar-apps-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.taskbar-apps-list {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.taskbar-app-icon {
+    width: 46px;
+    height: 46px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.taskbar-app-icon:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.taskbar-app-icon.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--win11-light-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--win11-light-blue);
+}
+
+/* System Tray */
+.taskbar-system-tray {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+}
+
+.system-tray-item {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all var(--transition-fast);
+    border-radius: 4px;
+}
+
+.system-tray-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.system-tray-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   START MENU
+   ============================================ */
+
+.start-menu {
+    position: fixed;
+    bottom: 58px;
+    left: 10px;
+    width: 400px;
+    max-height: 600px;
+    background: var(--acrylic-dark);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: startMenuSlideIn var(--transition-normal);
+}
+
+.start-menu.hidden {
+    display: none;
+    animation: none;
+}
+
+@keyframes startMenuSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.start-menu-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.start-menu-header {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.start-menu-search {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    outline: none;
+}
+
+.start-menu-search::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.start-menu-section {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.start-menu-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.start-menu-apps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.start-menu-app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+}
+
+.start-menu-app-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.start-menu-app-icon {
+    font-size: 28px;
+}
+
+.start-menu-app-name {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+}
+
+.start-menu-recommended {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.start-menu-project {
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.start-menu-project:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.start-menu-footer {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
+}
+
+.start-menu-power-button,
+.start-menu-settings-button {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.start-menu-power-button:hover,
+.start-menu-settings-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   NOTIFICATIONS PANEL
+   ============================================ */
+
+.notifications-panel {
+    position: fixed;
+    bottom: 58px;
+    right: 10px;
+    width: 350px;
+    max-height: 400px;
+    background: var(--acrylic-dark);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    z-index: 9000;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.notifications-panel.hidden {
+    display: none;
+}
+
+.notifications-header {
+    padding: 12px;
+    color: white;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-item {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================
+   WINDOW MANAGEMENT
+   ============================================ */
+
+.windows-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 500;
+}
+
+.win11-window {
+    position: absolute;
+    background: var(--acrylic-dark);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 400px;
+    min-height: 300px;
+    width: 800px;
+    height: 600px;
+    left: 50px;
+    top: 50px;
+    animation: windowOpen var(--transition-normal);
+    transition: box-shadow var(--transition-fast);
+}
+
+.win11-window:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes windowOpen {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.win11-window.minimizing {
+    animation: windowMinimize var(--transition-normal) forwards;
+}
+
+@keyframes windowMinimize {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.1);
+    }
+}
+
+.window-header {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: move;
+    user-select: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.window-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.window-icon {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.window-title {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.window-btn {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.window-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.window-btn.window-close:hover {
+    background: #E81123;
+    color: white;
+}
+
+.window-content {
+    flex: 1;
+    overflow: auto;
+    color: white;
+    padding: 12px;
+}
+
+/* ============================================
+   FILE EXPLORER
+   ============================================ */
+
+.file-explorer-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    align-items: center;
+}
+
+.toolbar-btn {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.toolbar-search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.toolbar-search {
+    width: 100%;
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    outline: none;
+}
+
+.toolbar-search::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.toolbar-spacer {
+    flex: 1;
+}
+
+.toolbar-select {
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+}
+
+.file-explorer-body {
+    display: flex;
+    gap: 12px;
+    height: 100%;
+}
+
+.file-explorer-sidebar {
+    width: 180px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 8px;
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    margin-bottom: 16px;
+}
+
+.sidebar-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.sidebar-item {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: all var(--transition-fast);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 4px;
+}
+
+.sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-item.active {
+    background: var(--win11-blue);
+    color: white;
+}
+
+.file-explorer-main {
+    flex: 1;
+    overflow: auto;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    padding: 12px;
+}
+
+.projects-grid.list-view {
+    grid-template-columns: 1fr;
+}
+
+.project-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.project-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.project-icon {
+    font-size: 36px;
+}
+
+.project-name {
+    font-size: 12px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ============================================
+   SETTINGS
+   ============================================ */
+
+.settings-container {
+    display: flex;
+    height: 100%;
+}
+
+.settings-sidebar {
+    width: 200px;
+    background: rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 0;
+    overflow-y: auto;
+}
+
+.settings-section-title {
+    padding: 0 12px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+}
+
+.settings-nav-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    border-left: 3px solid transparent;
+}
+
+.settings-nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.settings-nav-item.active {
+    border-left-color: var(--win11-blue);
+    background: rgba(0, 120, 212, 0.15);
+    color: white;
+}
+
+.settings-main {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.settings-content h3 {
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: white;
+}
+
+.settings-item {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.settings-item-value {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+}
+
+/* ============================================
+   TERMINAL
+   ============================================ */
+
+.terminal-content {
+    background: #0C0C0C;
+    color: #0DFFFF;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.terminal-output {
+    min-height: 100px;
+    margin-bottom: 12px;
+}
+
+.terminal-line {
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.terminal-prompt {
+    color: #0DFFFF;
+    font-weight: bold;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #0DFFFF;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    outline: none;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: #0DFFFF;
+    animation: terminalBlink 1s infinite;
+}
+
+@keyframes terminalBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* ============================================
+   EDGE BROWSER
+   ============================================ */
+
+.browser-toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    align-items: center;
+    border-radius: 4px 4px 0 0;
+}
+
+.browser-btn {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.browser-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.browser-address-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 6px 8px;
+}
+
+.browser-url-prefix {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+}
+
+.browser-url-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 12px;
+    outline: none;
+}
+
+.browser-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.contact-form-container {
+    padding: 20px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-form h3 {
+    margin-bottom: 12px;
+    color: white;
+}
+
+.contact-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.contact-form label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.contact-form .form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    outline: none;
+}
+
+.contact-form .form-control:focus {
+    border-color: var(--win11-blue);
+    background: rgba(0, 120, 212, 0.1);
+}
+
+.contact-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.browser-tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.browser-tab {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.browser-tab:hover {
+    background: rgba(0, 120, 212, 0.3);
+}
+
+/* ============================================
+   PHOTOS GALLERY
+   ============================================ */
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    padding: 12px;
+}
+
+.gallery-item {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gallery-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   LIGHTBOX
+   ============================================ */
+
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn var(--transition-normal);
+}
+
+.lightbox.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+    z-index: 1;
+}
+
+.lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.lightbox-prev,
+.lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    z-index: 1;
+}
+
+.lightbox-prev {
+    left: 20px;
+}
+
+.lightbox-next {
+    right: 20px;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   NOTEPAD
+   ============================================ */
+
+.notepad-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.notepad-btn {
+    padding: 6px 12px;
+    background: rgba(0, 120, 212, 0.8);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all var(--transition-fast);
+}
+
+.notepad-btn:hover {
+    background: var(--win11-blue);
+}
+
+.resume-text-area {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 12px;
+    line-height: 1.6;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================
+   ADMIN PANEL
+   ============================================ */
+
+.admin-content {
+    padding: 16px;
+}
+
+.admin-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 300px;
+}
+
+.admin-login-form h3 {
+    color: white;
+    margin-bottom: 12px;
+}
+
+.admin-login-form .form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.admin-login-form .form-control:focus {
+    border-color: var(--win11-blue);
+    outline: none;
+}
+
+.admin-login-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-panel.hidden {
+    display: none;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.admin-header h3 {
+    color: white;
+}
+
+.admin-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.admin-project-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+}
+
+.admin-project-form.hidden {
+    display: none;
+}
+
+.admin-project-form h4 {
+    color: white;
+    margin-bottom: 12px;
+}
+
+.admin-project-form .form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.admin-project-form .form-control:focus {
+    border-color: var(--win11-blue);
+    outline: none;
+}
+
+.admin-project-form label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+}
+
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.project-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.project-item-name {
+    color: white;
+    font-size: 13px;
+    flex: 1;
+}
+
+.project-item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.project-item-actions button {
+    padding: 6px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .win11-window {
+        min-width: 100%;
+        min-height: 100%;
+        width: 100% !important;
+        height: 100% !important;
+        left: 0 !important;
+        top: 0 !important;
+        border-radius: 0;
+    }
+
+    .desktop-icons-container {
+        display: none;
+    }
+
+    .taskbar {
+        height: 50px;
+    }
+
+    .start-menu {
+        width: calc(100% - 20px);
+        max-height: 60%;
+    }
+
+    .file-explorer-sidebar {
+        display: none;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+
+    .settings-sidebar {
+        display: none;
+    }
+
+    body::after {
+        content: 'Best experienced on desktop';
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--acrylic-dark);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 8px;
+        color: white;
+        z-index: 99999;
+        text-align: center;
+    }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    border: none;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: var(--win11-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--win11-light-blue);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-success {
+    background: #107C10;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #0E6E08;
+}
+
+.btn-danger {
+    background: #E81123;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #C50F1F;
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: #E81123;
+    border: 1px solid #E81123;
+}
+
+.btn-outline-danger:hover {
+    background: rgba(232, 17, 35, 0.1);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-size: 13px;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--win11-blue);
+}
+
+.alert {
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+
+.alert-danger {
+    background: rgba(232, 17, 35, 0.2);
+    color: #FFB3BA;
+    border: 1px solid rgba(232, 17, 35, 0.4);
+}
+
+.alert-success {
+    background: rgba(16, 124, 16, 0.2);
+    color: #90EE90;
+    border: 1px solid rgba(16, 124, 16, 0.4);
+}

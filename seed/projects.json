@@ -1,0 +1,24 @@
+[
+  {
+    "title": "Sample Portfolio Site",
+    "description": "A sample project showcasing the Windows 11 themed portfolio.",
+    "tech": ["HTML", "CSS", "JavaScript"],
+    "category": "web",
+    "thumbnail": "https://via.placeholder.com/400x300?text=Sample+Project",
+    "liveUrl": "https://example.com",
+    "githubUrl": "https://github.com/example/sample-portfolio",
+    "featured": true,
+    "dateAdded": "2026-06-10T00:00:00.000Z"
+  },
+  {
+    "title": "Interactive Terminal",
+    "description": "A mini terminal app demonstrating commands and interactivity.",
+    "tech": ["JavaScript"],
+    "category": "tools",
+    "thumbnail": "https://via.placeholder.com/400x300?text=Terminal",
+    "liveUrl": "",
+    "githubUrl": "https://github.com/example/terminal",
+    "featured": false,
+    "dateAdded": "2026-06-09T00:00:00.000Z"
+  }
+]

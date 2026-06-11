@@ -1,0 +1,32 @@
+{
+  "name": "windows11-developer-portfolio",
+  "version": "1.0.0",
+  "description": "A fully interactive Windows 11-themed developer portfolio website with Firebase integration",
+  "main": "index.js",
+  "scripts": {
+    "serve": "firebase serve --only hosting",
+    "serve:local": "npx -y firebase-tools@latest serve --only hosting",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "seed": "node scripts/seedFirestore.js",
+    "create-admin": "node scripts/createAdmin.js",
+    "start": "firebase serve --only hosting",
+    "build": "echo 'No build step needed for static site'",
+    "test": "echo 'No tests configured yet'"
+  },
+  "keywords": [
+    "portfolio",
+    "windows11",
+    "firebase",
+    "web-app",
+    "interactive"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  },
+  "dependencies": {
+    "firebase": "^10.7.1"
+  }
+}
