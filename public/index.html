@@ -56,6 +56,10 @@
                 <div class="desktop-icon-label">About Me</div>
             </div>
             <div class="desktop-icon" data-app="skills" title="Skills">
+                <div class="desktop-icon-image">📊</div>
+                <div class="desktop-icon-label">Skills</div>
+            </div>
+            <div class="desktop-icon" data-app="terminal" title="Terminal">
                 <div class="desktop-icon-image">💻</div>
                 <div class="desktop-icon-label">Terminal</div>
             </div>
@@ -130,6 +134,9 @@
                     <div class="system-tray-item" id="notificationBell" title="Notifications">
                         🔔
                     </div>
+                    <div class="system-tray-item" id="themeToggle" title="Toggle Dark/Light Mode">
+                        🌙
+                    </div>
                     <div class="system-tray-divider"></div>
                     <div class="system-tray-item" id="clockDisplay" title="Date and time settings">
                         00:00
@@ -146,41 +153,54 @@
                     <input type="text" id="startMenuSearch" class="start-menu-search" placeholder="Type here to search">
                 </div>
 
-                <!-- Pinned Apps -->
-                <div class="start-menu-section">
-                    <div class="start-menu-label">Pinned</div>
-                    <div class="start-menu-apps" id="pinnedApps">
-                        <div class="start-menu-app-item" data-app="projects">
-                            <div class="start-menu-app-icon">📁</div>
-                            <div class="start-menu-app-name">File Explorer</div>
-                        </div>
-                        <div class="start-menu-app-item" data-app="about">
-                            <div class="start-menu-app-icon">⚙️</div>
-                            <div class="start-menu-app-name">Settings</div>
-                        </div>
-                        <div class="start-menu-app-item" data-app="skills">
-                            <div class="start-menu-app-icon">💻</div>
-                            <div class="start-menu-app-name">Terminal</div>
-                        </div>
-                        <div class="start-menu-app-item" data-app="contact">
-                            <div class="start-menu-app-icon">🌐</div>
-                            <div class="start-menu-app-name">Edge</div>
-                        </div>
-                        <div class="start-menu-app-item" data-app="resume">
-                            <div class="start-menu-app-icon">📄</div>
-                            <div class="start-menu-app-name">Notepad</div>
-                        </div>
-                        <div class="start-menu-app-item" data-app="gallery">
-                            <div class="start-menu-app-icon">🖼️</div>
-                            <div class="start-menu-app-name">Photos</div>
-                        </div>
-                    </div>
+                <!-- Search Results Section -->
+                <div id="startMenuSearchResults" class="start-menu-section hidden">
+                    <div class="start-menu-label">Search Results</div>
+                    <div id="searchResultsList" class="search-results-list"></div>
                 </div>
 
-                <!-- Recommended / Recent Projects -->
-                <div class="start-menu-section">
-                    <div class="start-menu-label">Recommended</div>
-                    <div id="startMenuRecommended" class="start-menu-recommended"></div>
+                <!-- Normal Content Wrapper -->
+                <div id="startMenuNormalContent">
+                    <!-- Pinned Apps -->
+                    <div class="start-menu-section">
+                        <div class="start-menu-label">Pinned</div>
+                        <div class="start-menu-apps" id="pinnedApps">
+                            <div class="start-menu-app-item" data-app="projects">
+                                <div class="start-menu-app-icon">📁</div>
+                                <div class="start-menu-app-name">File Explorer</div>
+                            </div>
+                            <div class="start-menu-app-item" data-app="about">
+                                <div class="start-menu-app-icon">⚙️</div>
+                                <div class="start-menu-app-name">Settings</div>
+                            </div>
+                            <div class="start-menu-app-item" data-app="skills">
+                                <div class="start-menu-app-icon">📊</div>
+                                <div class="start-menu-app-name">Task Manager</div>
+                            </div>
+                            <div class="start-menu-app-item" data-app="contact">
+                                <div class="start-menu-app-icon">📧</div>
+                                <div class="start-menu-app-name">Mail</div>
+                            </div>
+                            <div class="start-menu-app-item" data-app="terminal">
+                                <div class="start-menu-app-icon">💻</div>
+                                <div class="start-menu-app-name">Terminal</div>
+                            </div>
+                            <div class="start-menu-app-item" data-app="resume">
+                                <div class="start-menu-app-icon">📄</div>
+                                <div class="start-menu-app-name">Notepad</div>
+                            </div>
+                            <div class="start-menu-app-item" data-app="gallery">
+                                <div class="start-menu-app-icon">🖼️</div>
+                                <div class="start-menu-app-name">Photos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended / Recent Projects -->
+                    <div class="start-menu-section">
+                        <div class="start-menu-label">Recommended</div>
+                        <div id="startMenuRecommended" class="start-menu-recommended"></div>
+                    </div>
                 </div>
 
                 <!-- Start Menu Footer -->
@@ -297,13 +317,74 @@
         </div>
     </template>
 
-    <!-- TERMINAL WINDOW -->
-    <template id="terminalTemplate">
+    <!-- TASK MANAGER WINDOW (SKILLS) -->
+    <template id="taskManagerTemplate">
         <div class="win11-window" data-window="skills">
             <div class="window-header">
                 <div class="window-header-left">
                     <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M4 6h16v2H4V6m0 5h16v2H4v-2m0 5h16v2H4v-2"/>
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <path d="M7 11h2v6H7zm4-4h2v10h-2zm4 7h2v3h-2z"/>
+                    </svg>
+                    <span class="window-title">Task Manager - Skills</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn window-minimize" title="Minimize">−</button>
+                    <button class="window-btn window-maximize" title="Maximize">□</button>
+                    <button class="window-btn window-close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content task-manager-content">
+                <div class="tm-sidebar">
+                    <div class="tm-tab active" data-tab="languages">
+                        <span class="tm-tab-icon">💻</span>
+                        <div class="tm-tab-info">
+                            <span class="tm-tab-name">CPU</span>
+                            <span class="tm-tab-val">Languages</span>
+                        </div>
+                    </div>
+                    <div class="tm-tab" data-tab="frameworks">
+                        <span class="tm-tab-icon">🧠</span>
+                        <div class="tm-tab-info">
+                            <span class="tm-tab-name">Memory</span>
+                            <span class="tm-tab-val">Frameworks</span>
+                        </div>
+                    </div>
+                    <div class="tm-tab" data-tab="databases">
+                        <span class="tm-tab-icon">💾</span>
+                        <div class="tm-tab-info">
+                            <span class="tm-tab-name">Disk</span>
+                            <span class="tm-tab-val">Databases</span>
+                        </div>
+                    </div>
+                    <div class="tm-tab" data-tab="tools">
+                        <span class="tm-tab-icon">🌐</span>
+                        <div class="tm-tab-info">
+                            <span class="tm-tab-name">Network</span>
+                            <span class="tm-tab-val">Tools</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tm-main">
+                    <div class="tm-header">
+                        <h3>Performance</h3>
+                        <div class="tm-perf-spec" id="tmPerfSpec">CPU - Languages</div>
+                    </div>
+                    <div class="tm-body" id="tmSkillsList">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- TERMINAL WINDOW -->
+    <template id="terminalTemplate">
+        <div class="win11-window" data-window="terminal">
+            <div class="window-header">
+                <div class="window-header-left">
+                    <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
                     </svg>
                     <span class="window-title">Terminal</span>
                 </div>
@@ -324,15 +405,15 @@
         </div>
     </template>
 
-    <!-- EDGE BROWSER WINDOW -->
-    <template id="edgeTemplate">
+    <!-- MAIL WINDOW (CONTACT) -->
+    <template id="mailTemplate">
         <div class="win11-window" data-window="contact">
             <div class="window-header">
                 <div class="window-header-left">
                     <svg class="window-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                     </svg>
-                    <span class="window-title">Edge</span>
+                    <span class="window-title">Mail - Contact Joseph</span>
                 </div>
                 <div class="window-controls">
                     <button class="window-btn window-minimize" title="Minimize">−</button>
@@ -340,40 +421,80 @@
                     <button class="window-btn window-close" title="Close">✕</button>
                 </div>
             </div>
-            <div class="window-content">
-                <div class="browser-toolbar">
-                    <button class="browser-btn">←</button>
-                    <button class="browser-btn">→</button>
-                    <button class="browser-btn">⟳</button>
-                    <div class="browser-address-bar">
-                        <span class="browser-url-prefix">https://</span>
-                        <input type="text" class="browser-url-input" value="portfolio.local/contact">
+            <div class="window-content mail-content">
+                <div class="mail-sidebar">
+                    <button class="mail-new-btn" id="mailNewBtn">＋ New mail</button>
+                    <div class="mail-folders">
+                        <div class="mail-folder active" data-folder="inbox">
+                            <span>📥 Inbox</span> <span class="mail-count">1</span>
+                        </div>
+                        <div class="mail-folder" data-folder="sent">
+                            <span>📤 Sent</span>
+                        </div>
+                        <div class="mail-folder" data-folder="drafts">
+                            <span>📄 Drafts</span>
+                        </div>
                     </div>
                 </div>
-                <div class="browser-content">
-                    <div id="contactForm" class="contact-form-container">
-                        <form id="contactFormElement" class="contact-form">
-                            <h3>Contact Me</h3>
-                            <div class="form-group">
-                                <label for="contactName">Name</label>
-                                <input type="text" id="contactName" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="contactEmail">Email</label>
-                                <input type="email" id="contactEmail" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="contactMessage">Message</label>
-                                <textarea id="contactMessage" class="form-control" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Send Message</button>
-                        </form>
-                        <div id="contactTabs" class="browser-tabs">
-                            <div class="browser-tab">Contact Form</div>
-                            <div class="browser-tab" data-link="https://linkedin.com">LinkedIn</div>
-                            <div class="browser-tab" data-link="https://github.com">GitHub</div>
-                            <div class="browser-tab" data-link="https://twitter.com">Twitter</div>
+                <div class="mail-list" id="mailList">
+                    <div class="mail-list-item active" data-mail="welcome">
+                        <div class="mail-item-header">
+                            <span class="mail-item-sender">Joseph Lamide Ogungbe</span>
+                            <span class="mail-item-time">Now</span>
                         </div>
+                        <div class="mail-item-subject">Welcome to my Portfolio Mail!</div>
+                        <div class="mail-item-preview">Click here to write me a message...</div>
+                    </div>
+                    <div class="mail-list-item" data-mail="google">
+                        <div class="mail-item-header">
+                            <span class="mail-item-sender">Google Careers</span>
+                            <span class="mail-item-time">1 hr ago</span>
+                        </div>
+                        <div class="mail-item-subject">Software Engineer Opportunity</div>
+                        <div class="mail-item-preview">Hello Joseph, we reviewed your profile and...</div>
+                    </div>
+                </div>
+                <div class="mail-view">
+                    <div id="mailWelcomeView" class="mail-view-pane hidden">
+                        <div class="mail-view-header">
+                            <h3>Welcome to my Portfolio Mail!</h3>
+                            <div class="mail-view-meta">
+                                <span>From: <strong>Joseph Lamide Ogungbe</strong> &lt;jossypremium.2016@gmail.com&gt;</span>
+                                <span>To: <strong>Visitor</strong></span>
+                            </div>
+                        </div>
+                        <div class="mail-view-body">
+                            <p>Hi there,</p>
+                            <p>Thanks for visiting my Windows 11 portfolio! You can use this Mail application to send me a message directly. Just click the "New mail" button in the sidebar or fill out the compose form.</p>
+                            <p>Looking forward to connecting with you!</p>
+                            <p>Best regards,<br>Joseph</p>
+                        </div>
+                    </div>
+                    <div id="mailComposeView" class="mail-view-pane">
+                        <div class="mail-compose-header">
+                            <h3>New Message</h3>
+                        </div>
+                        <form id="mailFormElement" class="mail-form">
+                            <div class="form-group-mail">
+                                <label>Name:</label>
+                                <input type="text" id="mailFromName" class="mail-input" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group-mail">
+                                <label>Email:</label>
+                                <input type="email" id="mailFromEmail" class="mail-input" placeholder="Your Email Address" required>
+                            </div>
+                            <div class="form-group-mail">
+                                <label>Subject:</label>
+                                <input type="text" id="mailSubject" class="mail-input" placeholder="Subject" required>
+                            </div>
+                            <div class="form-group-mail flex-grow-1">
+                                <textarea id="mailMessage" class="mail-textarea" placeholder="Type your message here..." required></textarea>
+                            </div>
+                            <div id="mailStatus" class="alert hidden" style="margin-top: 10px;"></div>
+                            <div class="mail-compose-footer">
+                                <button type="submit" class="mail-send-btn">Send 🚀</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -467,7 +588,14 @@
                         <input type="hidden" id="projectId">
                         <input type="text" id="projectTitle" placeholder="Title" class="form-control" required>
                         <textarea id="projectDescription" placeholder="Description" class="form-control" required></textarea>
-                        <input type="text" id="projectCategory" placeholder="Category" class="form-control">
+                        <select id="projectCategory" class="form-control" required style="margin-bottom: 8px;">
+                            <option value="" disabled selected>Select Category</option>
+                            <option value="Web">Web</option>
+                            <option value="Mobile">Mobile</option>
+                            <option value="AI">AI</option>
+                            <option value="Open Source">Open Source</option>
+                            <option value="Other">Other</option>
+                        </select>
                         <input type="text" id="projectTech" placeholder="Tech Stack (comma-separated)" class="form-control">
                         <input type="url" id="projectThumbnail" placeholder="Thumbnail URL" class="form-control">
                         <input type="url" id="projectLiveUrl" placeholder="Live URL" class="form-control">
@@ -482,6 +610,9 @@
             </div>
         </div>
     </template>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <!-- LIGHTBOX FOR GALLERY -->
     <div id="lightbox" class="lightbox hidden">
