@@ -27,18 +27,27 @@
         </div>
     </div>
 
-    <!-- LOCK SCREEN -->
+    <!-- LOCK SCREEN/login -->
     <div id="lockScreen" class="lock-screen hidden">
-        <div class="lock-wallpaper"></div>
-        <div class="lock-content">
-            <div class="lock-time">
-                <div class="lock-time-display"></div>
-                <div class="lock-date-display"></div>
-            </div>
-            <div class="lock-hint">Press any key or click to unlock</div>
+    <div class="lock-wallpaper"></div>
+    <div class="lock-content">
+        <div class="lock-time">
+            <div class="lock-time-display"></div>
+            <div class="lock-date-display"></div>
+        </div>
+        
+        <div id="loginFormContainer" class="login-form-container">
+            <div class="user-avatar">👤</div>
+            <div class="login-username">Guest User</div>
+            <button id="googleSignInBtn" class="win11-btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" style="margin-right: 8px;">
+                    <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l3.227-3.227C18.29 1.48 15.545 0 12.24 0 5.58 0 0 5.58 0 12.24s5.58 12.24 12.24 12.24c6.96 0 11.57-4.894 11.57-11.79 0-.795-.085-1.4-.195-2.405H12.24z"/>
+                </svg>
+                Sign in with Google
+            </button>
         </div>
     </div>
-
+</div>
     <!-- DESKTOP ENVIRONMENT -->
     <div id="desktopEnvironment" class="desktop-environment hidden">
         
@@ -627,24 +636,38 @@
     <!-- FIREBASE CONFIGURATION -->
     <script type="module">
         // Your Firebase configuration
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Initialize Firebase (configured)
-        const firebaseConfig = {
-            apiKey: "AIzaSyBGUXGB6E1nOgIUDGNqnqzYc_5Xa7aHwDM",
-            authDomain: "my-portfolio-7dbbb.firebaseapp.com",
-            projectId: "my-portfolio-7dbbb",
-            storageBucket: "my-portfolio-7dbbb.firebasestorage.app",
-            messagingSenderId: "746514592590",
-            appId: "1:746514592590:web:f44a00a8fc98b0f60a241f",
-            measurementId: "G-HHVD7FE42S"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyBGUXGB6E1nOgIUDGNqnqzYc_5Xa7aHwDM",
+        authDomain: "my-portfolio-7dbbb.firebaseapp.com",
+        projectId: "my-portfolio-7dbbb",
+        storageBucket: "my-portfolio-7dbbb.firebasestorage.app",
+        messagingSenderId: "746514592590",
+        appId: "1:746514592590:web:f44a00a8fc98b0f60a241f",
+        measurementId: "G-HHVD7FE42S"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        window.db = getFirestore(app);
-        window.auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    
+    // Bind objects globally so os.js can interact with them smoothly
+    window.db = getFirestore(app);
+    window.auth = getAuth(app);
+    window.googleProvider = new GoogleAuthProvider();
+    window.googleSignInPromise = null;
+    window.signInWithGoogle = () => {
+        if (!window.googleSignInPromise) {
+            window.googleSignInPromise = signInWithPopup(window.auth, window.googleProvider)
+                .finally(() => {
+                    window.googleSignInPromise = null;
+                });
+        }
+
+        return window.googleSignInPromise;
+    };
+    window.signOutUser = () => signOut(window.auth);
     </script>
 
     <!-- Bootstrap JS -->

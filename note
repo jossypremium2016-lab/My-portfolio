@@ -13,3 +13,5 @@ service cloud.firestore {
     }
   }
 }
+
+https://claude.ai/chat/97b90e72-1bac-4c11-bb0b-ea71eb3a63da

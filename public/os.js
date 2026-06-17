@@ -1,4 +1,4 @@
-// ============================================
+//// ============================================
 // WINDOWS 11 PORTFOLIO OS - MAIN APPLICATION
 // ============================================
 
@@ -9,6 +9,7 @@ const state = {
     bootComplete: false,
     desktopActive: false,
     startMenuOpen: false,
+    loginInProgress: false,
     openWindows: new Map(),
     zIndex: 1000,
     currentUser: null,
@@ -36,13 +37,13 @@ const portfolioData = {
     bio: "I am a skilled Accountant and Software Engineer who combines financial expertise with technology solutions. I help businesses improve financial reporting, automate processes, analyze data, and build software that drives efficiency and growth. If you need someone who understands both numbers and technology, let's connect.",
     email: 'jossypremium.2016@gmail.com',
     social: {
-        github:   'https://github.com/jossypremium2016-lab',
+        github: 'https://github.com/jossypremium2016-lab',
         linkedin: 'https://linkedin.com/in/Joseph-Lamide-Ogungbe',
-        twitter:  'https://twitter.com/jossypremium'
+        twitter: 'https://twitter.com/jossypremium'
     },
     experience: [
         { title: 'Financial Systems Engineer', company: 'Premium Solutions', duration: '2023 - Present' },
-        { title: 'Software Developer',        company: 'TechFin Services',   duration: '2021 - 2023' }
+        { title: 'Software Developer', company: 'TechFin Services', duration: '2021 - 2023' }
     ],
     skills: ['JavaScript', 'React', 'Node.js', 'Firebase', 'CSS3', 'Web Design', 'UI/UX', 'Git', 'SQL', 'Accounting', 'Python', 'Docker'],
     education: [
@@ -82,10 +83,10 @@ Advanced Diploma in Software Engineering — ALX Program (2022)`
 function initTheme() {
     const themeBtn = document.getElementById('themeToggle');
     if (!themeBtn) return;
-    
+
     const savedTheme = localStorage.getItem('win11-theme') || 'dark';
     state.darkMode = savedTheme === 'dark';
-    
+
     if (state.darkMode) {
         document.body.classList.remove('light-mode');
         themeBtn.textContent = '🌙';
@@ -93,7 +94,7 @@ function initTheme() {
         document.body.classList.add('light-mode');
         themeBtn.textContent = '☀️';
     }
-    
+
     themeBtn.addEventListener('click', () => {
         state.darkMode = !state.darkMode;
         if (state.darkMode) {
@@ -115,26 +116,26 @@ function handleSearch(queryText) {
     const resultsContainer = document.getElementById('startMenuSearchResults');
     const normalContent = document.getElementById('startMenuNormalContent');
     const resultsList = document.getElementById('searchResultsList');
-    
+
     if (!resultsContainer || !normalContent || !resultsList) return;
-    
+
     const v = queryText.trim().toLowerCase();
     if (v === '') {
         resultsContainer.classList.add('hidden');
         normalContent.classList.remove('hidden');
         return;
     }
-    
+
     const menu = document.getElementById('startMenu');
     if (menu && menu.classList.contains('hidden')) {
         state.startMenuOpen = true;
         menu.classList.remove('hidden');
     }
-    
+
     resultsContainer.classList.remove('hidden');
     normalContent.classList.add('hidden');
     resultsList.innerHTML = '';
-    
+
     const apps = [
         { name: 'projects', label: 'File Explorer', icon: '📁' },
         { name: 'about', label: 'Settings', icon: '⚙️' },
@@ -144,19 +145,19 @@ function handleSearch(queryText) {
         { name: 'resume', label: 'Notepad', icon: '📄' },
         { name: 'gallery', label: 'Photos', icon: '🖼️' }
     ];
-    
+
     const matchedApps = apps.filter(app => app.label.toLowerCase().includes(v));
-    const matchedProjects = state.projects.filter(p => 
+    const matchedProjects = state.projects.filter(p =>
         (p.title || '').toLowerCase().includes(v) ||
         (p.description || '').toLowerCase().includes(v) ||
         (p.techStack || p.tech || []).some(t => t.toLowerCase().includes(v))
     );
-    
+
     if (matchedApps.length === 0 && matchedProjects.length === 0) {
         resultsList.innerHTML = '<div class="search-result-empty" style="color: var(--text-color); opacity: 0.5; padding: 10px; font-style: italic; font-size: 13px;">No results found</div>';
         return;
     }
-    
+
     matchedApps.forEach(app => {
         const item = document.createElement('div');
         item.className = 'start-menu-app-item search-result-item-style';
@@ -167,7 +168,7 @@ function handleSearch(queryText) {
         item.style.cursor = 'pointer';
         item.style.borderRadius = '4px';
         item.style.color = 'var(--text-color)';
-        
+
         item.innerHTML = `
             <span style="font-size: 18px;">${app.icon}</span>
             <div style="display: flex; flex-direction: column;">
@@ -175,7 +176,7 @@ function handleSearch(queryText) {
                 <span style="font-size: 11px; opacity: 0.6;">System App</span>
             </div>
         `;
-        
+
         item.addEventListener('click', () => {
             openApp(app.name);
             toggleStartMenu();
@@ -183,7 +184,7 @@ function handleSearch(queryText) {
         });
         resultsList.appendChild(item);
     });
-    
+
     matchedProjects.forEach(p => {
         const item = document.createElement('div');
         item.className = 'start-menu-app-item search-result-item-style';
@@ -194,7 +195,7 @@ function handleSearch(queryText) {
         item.style.cursor = 'pointer';
         item.style.borderRadius = '4px';
         item.style.color = 'var(--text-color)';
-        
+
         const cat = p.category ? p.category.toUpperCase() : 'PROJECT';
         item.innerHTML = `
             <span style="font-size: 18px;">📦</span>
@@ -203,7 +204,7 @@ function handleSearch(queryText) {
                 <span style="font-size: 11px; opacity: 0.6;">Project • ${cat}</span>
             </div>
         `;
-        
+
         item.addEventListener('click', () => {
             openApp('projects');
             toggleStartMenu();
@@ -234,8 +235,8 @@ function clearSearches() {
     if (normalContent) normalContent.classList.remove('hidden');
 }
 
-// BOOT & LOCK SCREEN
-function initBoot() {
+// ---------- BOOT & LOCK SCREEN ----------
+export function initBoot() {
     setTimeout(() => {
         const boot = document.getElementById('bootScreen');
         if (boot) boot.classList.add('hidden');
@@ -248,9 +249,39 @@ function showLockScreen() {
     if (!lockScreen) return;
     lockScreen.classList.remove('hidden');
     updateLockScreenTime();
-    setInterval(updateLockScreenTime, 1000);
-    document.addEventListener('keydown', unlockScreen);
-    lockScreen.addEventListener('click', unlockScreen);
+    
+    const signInBtn = document.getElementById('googleSignInBtn');
+    if (signInBtn) {
+        signInBtn.replaceWith(signInBtn.cloneNode(true));
+        document.getElementById('googleSignInBtn').addEventListener('click', handleGoogleLogin);
+    }
+}
+
+async function handleGoogleLogin() {
+    if (state.loginInProgress) return;
+
+    state.loginInProgress = true;
+    const signInBtn = document.getElementById('googleSignInBtn');
+    if (signInBtn) signInBtn.disabled = true;
+
+    try {
+        if (typeof window.signInWithGoogle === 'function') {
+            const result = await window.signInWithGoogle();
+            const user = result.user;
+            showToast('Authenticated', `Welcome ${user.displayName || user.email}`, '🔐');
+            unlockScreen();
+        } else {
+            throw new Error("Google Sign-In configuration is missing in index.html");
+        }
+    } catch (error) {
+        console.error("Authentication Error: ", error);
+        if (error.code !== 'auth/cancelled-popup-request') {
+            showToast('Login Failed', error.message, '❌');
+        }
+    } finally {
+        state.loginInProgress = false;
+        if (signInBtn) signInBtn.disabled = false;
+    }
 }
 
 function updateLockScreenTime() {
@@ -265,7 +296,6 @@ function updateLockScreenTime() {
 
 function unlockScreen() {
     if (!state.bootComplete) {
-        document.removeEventListener('keydown', unlockScreen);
         const lockScreen = document.getElementById('lockScreen');
         if (lockScreen) lockScreen.classList.add('hidden');
         state.bootComplete = true;
@@ -273,14 +303,14 @@ function unlockScreen() {
     }
 }
 
-// DESKTOP INITIALIZATION
-function initDesktop() {
+// ---------- DESKTOP INITIALIZATION ----------
+export function initDesktop() {
     const desktop = document.getElementById('desktopEnvironment');
     if (desktop) desktop.classList.remove('hidden');
     const wpEl = document.querySelector('.desktop-wallpaper');
     if (wpEl) wpEl.style.background = wallpapers[state.wallpaperIndex];
     state.desktopActive = true;
-    setInterval(updateTaskbarClock, 1000);
+    
     updateTaskbarClock();
     initTheme();
     initializeEventListeners();
@@ -297,23 +327,20 @@ function updateTaskbarClock() {
     if (clock) clock.textContent = timeStr;
 }
 
-// EVENT LISTENERS
+// ---------- EVENT LISTENERS ----------
 function initializeEventListeners() {
     const startBtn = document.getElementById('startButton');
     if (startBtn) startBtn.addEventListener('click', toggleStartMenu);
 
     document.querySelectorAll('.desktop-icon').forEach(icon => {
-        // Single click → select (visual highlight)
         icon.addEventListener('click', (e) => {
             document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
             icon.classList.add('selected');
         });
-        // Double click → open app
         icon.addEventListener('dblclick', (e) => {
             const app = e.currentTarget.dataset.app;
             openApp(app);
         });
-        // Touch tap → open immediately (mobile/tablet)
         let touchTimeout;
         icon.addEventListener('touchstart', (e) => {
             touchTimeout = setTimeout(() => { openApp(icon.dataset.app); }, 300);
@@ -321,7 +348,6 @@ function initializeEventListeners() {
         icon.addEventListener('touchend', () => clearTimeout(touchTimeout), { passive: true });
     });
 
-    // Click on desktop background → deselect icons
     const desktopBg = document.querySelector('.desktop-wallpaper');
     if (desktopBg) {
         desktopBg.addEventListener('click', () => {
@@ -354,18 +380,17 @@ function initializeEventListeners() {
     if (powerBtn) powerBtn.addEventListener('click', shutdown);
     const settingsBtn = document.getElementById('settingsButton');
     if (settingsBtn) settingsBtn.addEventListener('click', () => { openApp('about'); toggleStartMenu(); });
-    
-    // Bind search event listeners
+
     const taskbarSearch = document.getElementById('taskbarSearch');
     const startMenuSearch = document.getElementById('startMenuSearch');
-    
+
     if (taskbarSearch) {
         taskbarSearch.addEventListener('input', (e) => {
             if (startMenuSearch) startMenuSearch.value = e.target.value;
             handleSearch(e.target.value);
         });
     }
-    
+
     if (startMenuSearch) {
         startMenuSearch.addEventListener('input', (e) => {
             if (taskbarSearch) taskbarSearch.value = e.target.value;
@@ -376,17 +401,71 @@ function initializeEventListeners() {
     document.addEventListener('submit', handleFormSubmit);
 }
 
+function checkAuthStatus() {
+    if (window.auth) {
+        window.auth.onAuthStateChanged((user) => {
+            state.currentUser = user;
+            if (user) {
+                if (user.email === 'jossypremium.2016@gmail.com') {
+                    const adminIcon = document.getElementById('adminIcon');
+                    if (adminIcon) adminIcon.classList.remove('admin-hidden');
+                    showToast('Admin Mode', 'Full administrative write permissions allowed.', '⚙️');
+                } else {
+                    enforceGuestReadOnlyMode();
+                }
+            } else {
+                const desktop = document.getElementById('desktopEnvironment');
+                if (desktop) desktop.classList.add('hidden');
+                state.bootComplete = false;
+                showLockScreen();
+            }
+        });
+    } else {
+        console.warn('Firebase Auth instance not found on window context.');
+    }
+}
+
+function enforceGuestReadOnlyMode() {
+    const adminIcon = document.getElementById('adminIcon');
+    if (adminIcon) adminIcon.classList.add('admin-hidden');
+
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
+            e.preventDefault();
+            showToast('Access Denied', 'Administrative privileges required.', '🔐');
+        }
+    }, true);
+
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (
+            target.id === 'addProjectBtn' || 
+            target.classList.contains('project-delete-btn') || 
+            target.classList.contains('project-edit-btn') || 
+            target.closest('#adminPanel')
+        ) {
+            e.stopPropagation();
+            e.preventDefault();
+            showToast('Read-Only Mode', 'You can view everything, but making updates is restricted.', '⚠️');
+        }
+    }, true);
+}
+
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
             e.preventDefault();
-            openApp('admin');
+            if (state.currentUser && state.currentUser.email === 'jossypremium.2016@gmail.com') {
+                openApp('admin');
+            } else {
+                showToast('Access Denied', 'Administrative privileges required.', '🔐');
+            }
         }
         if (e.key === 'Escape' && state.startMenuOpen) toggleStartMenu();
     });
 }
 
-// START MENU
+// ---------- START MENU ----------
 function toggleStartMenu() {
     const menu = document.getElementById('startMenu');
     if (!menu) return;
@@ -421,7 +500,7 @@ function loadRecommendedProjects() {
         item.addEventListener('click', () => { openApp('projects'); toggleStartMenu(); });
         recommended.appendChild(item);
     });
-} // ← FIX Bug 1: closing brace that was missing, breaking ALL subsequent code
+}
 
 // ---------- Context Menu ----------
 function showContextMenu(e) {
@@ -437,14 +516,12 @@ function hideContextMenu() {
     const menu = document.getElementById('contextMenu');
     if (menu) menu.classList.add('hidden');
 }
-    
 
-// Context actions
 document.addEventListener('click', (e) => {
     const item = e.target.closest('.context-menu-item');
     if (item) {
         const action = item.dataset.action;
-        switch(action) {
+        switch (action) {
             case 'refresh': location.reload(); break;
             case 'view-projects': openApp('projects'); break;
             case 'about': openApp('about'); break;
@@ -458,13 +535,13 @@ document.addEventListener('click', (e) => {
 
 // ---------- Notifications ----------
 function toggleNotifications() { const panel = document.getElementById('notificationsPanel'); if (panel) panel.classList.toggle('hidden'); }
-function addNotification(message) { const list = document.getElementById('notificationsList'); if (!list) return; const item = document.createElement('div'); item.className='notification-item'; item.textContent=message; list.appendChild(item); setTimeout(()=>item.remove(),5000); }
+function addNotification(message) { const list = document.getElementById('notificationsList'); if (!list) return; const item = document.createElement('div'); item.className = 'notification-item'; item.textContent = message; list.appendChild(item); setTimeout(() => item.remove(), 5000); }
 
 // ---------- Toast Notifications ----------
 function showToast(title, message, icon = '🔔') {
     const container = document.getElementById('toastContainer');
     if (!container) return;
-    
+
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.innerHTML = `
@@ -474,13 +551,10 @@ function showToast(title, message, icon = '🔔') {
             <div class="toast-message">${message}</div>
         </div>
     `;
-    
+
     container.appendChild(toast);
-    
-    // Trigger slide-in
     setTimeout(() => toast.classList.add('show'), 50);
-    
-    // Auto remove after 5 seconds
+
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
@@ -489,42 +563,53 @@ function showToast(title, message, icon = '🔔') {
 
 // ---------- Window Manager ----------
 class WindowManager {
-    constructor(){
+    constructor() {
         this.draggingWindow = null;
         this.dragOffset = { x: 0, y: 0 };
         this.onDrag = this.onDrag.bind(this);
         this.stopDrag = this.stopDrag.bind(this);
     }
-    createWindow(template){ 
-        const clone=document.importNode(template.content,true); 
-        const windowEl=clone.querySelector('.win11-window'); 
-        document.getElementById('windowsContainer').appendChild(windowEl); 
-        windowEl.style.zIndex=state.zIndex++; 
-        this.setupWindowControls(windowEl); 
+    createWindow(template) {
+        if (!template) {
+            console.error('Window template was not found.');
+            showToast('Window Error', 'This app window template is missing.', '!');
+            return null;
+        }
+
+        const clone = document.importNode(template.content, true);
+        const windowEl = clone.querySelector('.win11-window');
+        if (!windowEl) {
+            console.error('Window template does not contain .win11-window.');
+            showToast('Window Error', 'This app window is not configured correctly.', '!');
+            return null;
+        }
+
+        document.getElementById('windowsContainer').appendChild(windowEl);
+        windowEl.style.zIndex = state.zIndex++;
+        this.setupWindowControls(windowEl);
         this.setupResizing(windowEl);
-        const appName=windowEl.dataset.window; 
-        state.openWindows.set(appName,windowEl); 
-        renderTaskbar(); 
-        return windowEl; 
+        const appName = windowEl.dataset.window;
+        state.openWindows.set(appName, windowEl);
+        renderTaskbar();
+        return windowEl;
     }
-    setupWindowControls(windowEl){ 
-        const header=windowEl.querySelector('.window-header'); 
-        const minimizeBtn=windowEl.querySelector('.window-minimize'); 
-        const maximizeBtn=windowEl.querySelector('.window-maximize'); 
-        const closeBtn=windowEl.querySelector('.window-close'); 
-        if(header) header.addEventListener('mousedown', (e)=>{ 
-            if(e.target.closest('.window-controls')) return; 
-            this.startDrag(e,windowEl); 
-        }); 
-        if(header) header.addEventListener('dblclick', ()=>this.toggleMaximize(windowEl)); 
-        if(minimizeBtn) minimizeBtn.addEventListener('click', ()=>this.minimizeWindow(windowEl)); 
-        if(maximizeBtn) maximizeBtn.addEventListener('click', ()=>this.toggleMaximize(windowEl)); 
-        if(closeBtn) closeBtn.addEventListener('click', ()=>this.closeWindow(windowEl)); 
-        windowEl.addEventListener('mousedown', ()=>{ 
-            windowEl.style.zIndex=state.zIndex++; 
-        }); 
-        
-        // Setup Snap Layout Picker
+    setupWindowControls(windowEl) {
+        const header = windowEl.querySelector('.window-header');
+        const minimizeBtn = windowEl.querySelector('.window-minimize');
+        const maximizeBtn = windowEl.querySelector('.window-maximize');
+        const closeBtn = windowEl.querySelector('.window-close');
+        if (header) header.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.window-controls')) return;
+            this.startDrag(e, windowEl);
+        });
+        if (header) header.addEventListener('dblclick', () => this.toggleMaximize(windowEl));
+        if (minimizeBtn) minimizeBtn.addEventListener('click', () => this.minimizeWindow(windowEl));
+        if (maximizeBtn) maximizeBtn.addEventListener('click', () => this.toggleMaximize(windowEl));
+        if (closeBtn) closeBtn.addEventListener('click', () => this.closeWindow(windowEl));
+        windowEl.addEventListener('mousedown', () => {
+            windowEl.style.zIndex = state.zIndex++;
+        });
+
         if (maximizeBtn) {
             const overlay = document.createElement('div');
             overlay.className = 'snap-layout-overlay';
@@ -537,7 +622,7 @@ class WindowManager {
                 </div>
             `;
             maximizeBtn.appendChild(overlay);
-            
+
             let ghost = document.getElementById('snapGhostPreview');
             if (!ghost) {
                 ghost = document.createElement('div');
@@ -545,7 +630,7 @@ class WindowManager {
                 ghost.className = 'snap-ghost-preview';
                 document.body.appendChild(ghost);
             }
-            
+
             overlay.querySelectorAll('.snap-zone').forEach(zone => {
                 zone.addEventListener('mouseenter', (e) => {
                     showGhostPreview(e.target.dataset.layout);
@@ -569,11 +654,11 @@ class WindowManager {
         bottomHandle.className = 'window-resize-handle handle-b';
         const cornerHandle = document.createElement('div');
         cornerHandle.className = 'window-resize-handle handle-se';
-        
+
         windowEl.appendChild(rightHandle);
         windowEl.appendChild(bottomHandle);
         windowEl.appendChild(cornerHandle);
-        
+
         const startResize = (e, direction) => {
             e.preventDefault();
             e.stopPropagation();
@@ -581,7 +666,7 @@ class WindowManager {
             const startHeight = windowEl.offsetHeight;
             const startX = e.clientX || e.touches[0].clientX;
             const startY = e.clientY || e.touches[0].clientY;
-            
+
             const doResize = (moveEvent) => {
                 const clientX = moveEvent.clientX || (moveEvent.touches && moveEvent.touches[0].clientX);
                 const clientY = moveEvent.clientY || (moveEvent.touches && moveEvent.touches[0].clientY);
@@ -594,64 +679,64 @@ class WindowManager {
                     windowEl.style.height = newHeight + 'px';
                 }
             };
-            
+
             const stopResize = () => {
                 document.removeEventListener('mousemove', doResize);
                 document.removeEventListener('mouseup', stopResize);
                 document.removeEventListener('touchmove', doResize);
                 document.removeEventListener('touchend', stopResize);
             };
-            
+
             document.addEventListener('mousemove', doResize);
             document.addEventListener('mouseup', stopResize);
             document.addEventListener('touchmove', doResize, { passive: false });
             document.addEventListener('touchend', stopResize);
         };
-        
+
         rightHandle.addEventListener('mousedown', (e) => startResize(e, 'r'));
         bottomHandle.addEventListener('mousedown', (e) => startResize(e, 'b'));
         cornerHandle.addEventListener('mousedown', (e) => startResize(e, 'rb'));
-        
+
         rightHandle.addEventListener('touchstart', (e) => startResize(e, 'r'), { passive: false });
         bottomHandle.addEventListener('touchstart', (e) => startResize(e, 'b'), { passive: false });
         cornerHandle.addEventListener('touchstart', (e) => startResize(e, 'rb'), { passive: false });
     }
-    startDrag(e,windowEl){ this.draggingWindow=windowEl; const rect=windowEl.getBoundingClientRect(); this.dragOffset.x=e.clientX-rect.left; this.dragOffset.y=e.clientY-rect.top; document.addEventListener('mousemove', this.onDrag); document.addEventListener('mouseup', this.stopDrag); }
-    onDrag(e){
-        if(!this.draggingWindow) return;
+    startDrag(e, windowEl) { this.draggingWindow = windowEl; const rect = windowEl.getBoundingClientRect(); this.dragOffset.x = e.clientX - rect.left; this.dragOffset.y = e.clientY - rect.top; document.addEventListener('mousemove', this.onDrag); document.addEventListener('mouseup', this.stopDrag); }
+    onDrag(e) {
+        if (!this.draggingWindow) return;
         const x = e.clientX - this.dragOffset.x;
         const y = e.clientY - this.dragOffset.y;
         this.draggingWindow.style.left = x + 'px';
         this.draggingWindow.style.top = y + 'px';
     }
-    stopDrag(){
+    stopDrag() {
         this.draggingWindow = null;
         document.removeEventListener('mousemove', this.onDrag);
         document.removeEventListener('mouseup', this.stopDrag);
     }
-    toggleMaximize(windowEl){ 
+    toggleMaximize(windowEl) {
         windowEl.classList.remove('minimizing');
-        if(windowEl.style.width==='calc(100% - 20px)'){ 
-            windowEl.style.width='800px'; 
-            windowEl.style.height='600px'; 
-            windowEl.style.left='50px'; 
-            windowEl.style.top='50px'; 
-        } else { 
-            windowEl.style.width='calc(100% - 20px)'; 
-            windowEl.style.height='calc(100% - 78px)'; 
-            windowEl.style.left='10px'; 
-            windowEl.style.top='10px'; 
-        } 
+        if (windowEl.style.width === 'calc(100% - 20px)') {
+            windowEl.style.width = '800px';
+            windowEl.style.height = '600px';
+            windowEl.style.left = '50px';
+            windowEl.style.top = '50px';
+        } else {
+            windowEl.style.width = 'calc(100% - 20px)';
+            windowEl.style.height = 'calc(100% - 78px)';
+            windowEl.style.left = '10px';
+            windowEl.style.top = '10px';
+        }
     }
-    minimizeWindow(windowEl){ windowEl.classList.add('minimizing'); setTimeout(()=>{ windowEl.style.display='none'; },300); }
-    restoreWindow(windowEl){ windowEl.classList.remove('minimizing'); windowEl.style.display='flex'; windowEl.style.zIndex=state.zIndex++; }
-    closeWindow(windowEl){ 
-        const appName=windowEl.dataset.window; 
+    minimizeWindow(windowEl) { windowEl.classList.add('minimizing'); setTimeout(() => { windowEl.style.display = 'none'; }, 300); }
+    restoreWindow(windowEl) { windowEl.classList.remove('minimizing'); windowEl.style.display = 'flex'; windowEl.style.zIndex = state.zIndex++; }
+    closeWindow(windowEl) {
+        const appName = windowEl.dataset.window;
         windowEl.classList.add('closing');
         setTimeout(() => {
-            windowEl.remove(); 
-            state.openWindows.delete(appName); 
-            renderTaskbar(); 
+            windowEl.remove();
+            state.openWindows.delete(appName);
+            renderTaskbar();
         }, 200);
     }
 }
@@ -716,56 +801,67 @@ function snapWindow(windowEl, layout) {
 }
 
 // ---------- App Management ----------
-function openApp(appName){ 
-    if(state.openWindows.has(appName)){ 
-        const existingWindow=state.openWindows.get(appName); 
-        if(existingWindow.style.display==='none') windowManager.restoreWindow(existingWindow); 
-        else existingWindow.style.zIndex=state.zIndex++; 
-        return; 
-    } 
-    let template; 
-    switch(appName){ 
-        case 'projects': 
-            template=document.getElementById('fileExplorerTemplate'); 
-            const w1=windowManager.createWindow(template); 
-            initFileExplorer(w1); 
-            break; 
-        case 'about': 
-            template=document.getElementById('settingsTemplate'); 
-            const w2=windowManager.createWindow(template); 
-            initSettings(w2); 
-            break; 
-        case 'skills': 
-            template=document.getElementById('taskManagerTemplate'); 
-            const w3=windowManager.createWindow(template); 
-            initTaskManager(w3); 
-            break; 
-        case 'terminal': 
-            template=document.getElementById('terminalTemplate'); 
-            const wTerm=windowManager.createWindow(template); 
-            initTerminal(wTerm); 
-            break; 
-        case 'contact': 
-            template=document.getElementById('mailTemplate'); 
-            const w4=windowManager.createWindow(template); 
-            initMail(w4); 
-            break; 
-        case 'resume': 
-            template=document.getElementById('notepadTemplate'); 
-            const w5=windowManager.createWindow(template); 
-            initNotepad(w5); 
-            break; 
-        case 'gallery': 
-            template=document.getElementById('photosTemplate'); 
-            const w6=windowManager.createWindow(template); 
-            initPhotos(w6); 
-            break; 
-        case 'admin': 
-            template=document.getElementById('adminLoginTemplate'); 
-            const w7=windowManager.createWindow(template); 
-            initAdmin(w7); 
-            break; 
-    } 
+function openApp(appName) {
+    if (state.openWindows.has(appName)) {
+        const existingWindow = state.openWindows.get(appName);
+        if (existingWindow.style.display === 'none') windowManager.restoreWindow(existingWindow);
+        else existingWindow.style.zIndex = state.zIndex++;
+        return;
+    }
+    let template;
+    switch (appName) {
+        case 'projects':
+            template = document.getElementById('fileExplorerTemplate');
+            const w1 = windowManager.createWindow(template);
+            if (!w1) return;
+            initFileExplorer(w1);
+            break;
+        case 'about':
+            template = document.getElementById('settingsTemplate');
+            const w2 = windowManager.createWindow(template);
+            if (!w2) return;
+            initSettings(w2);
+            break;
+        case 'skills':
+            template = document.getElementById('taskManagerTemplate');
+            const w3 = windowManager.createWindow(template);
+            if (!w3) return;
+            initTaskManager(w3);
+            break;
+        case 'terminal':
+            template = document.getElementById('terminalTemplate');
+            const wTerm = windowManager.createWindow(template);
+            if (!wTerm) return;
+            initTerminal(wTerm);
+            break;
+        case 'contact':
+            template = document.getElementById('mailTemplate');
+            const w4 = windowManager.createWindow(template);
+            if (!w4) return;
+            initMail(w4);
+            break;
+        case 'resume':
+            template = document.getElementById('notepadTemplate');
+            const w5 = windowManager.createWindow(template);
+            if (!w5) return;
+            initNotepad(w5);
+            break;
+        case 'gallery':
+            template = document.getElementById('photosTemplate');
+            const w6 = windowManager.createWindow(template);
+            if (!w6) return;
+            initPhotos(w6);
+            break;
+        case 'admin':
+            template = document.getElementById('adminLoginTemplate');
+            const w7 = windowManager.createWindow(template);
+            if (!w7) return;
+            initAdmin(w7);
+            break;
+        default:
+            console.error(`Unknown app requested: ${appName}`);
+            showToast('App Error', `Unknown app: ${appName}`, '!');
+    }
 }
 
 const pinnedApps = [
@@ -782,32 +878,28 @@ function renderTaskbar() {
     const list = document.getElementById('taskbarAppsList');
     if (!list) return;
     list.innerHTML = '';
-    
+
     const allApps = [...pinnedApps];
     state.openWindows.forEach((winEl, appName) => {
         if (!allApps.some(app => app.name === appName)) {
             const iconMap = { 'resume': '📄', 'gallery': '🖼️', 'admin': '🔐' };
             const labelMap = { 'resume': 'Notepad', 'gallery': 'Photos', 'admin': 'Admin' };
-            allApps.push({
-                name: appName,
-                icon: iconMap[appName] || '🗔',
-                label: labelMap[appName] || appName
-            });
+            allApps.push({ name: appName, icon: iconMap[appName] || '🗔', label: labelMap[appName] || appName });
         }
     });
-    
+
     allApps.forEach(app => {
         const btn = document.createElement('button');
         btn.className = 'taskbar-app-icon';
         btn.dataset.app = app.name;
         btn.title = app.label;
         btn.innerHTML = app.icon;
-        
+
         const isRunning = state.openWindows.has(app.name);
         if (isRunning) {
             btn.classList.add('active');
         }
-        
+
         btn.addEventListener('click', (e) => {
             if (e.target.closest('.taskbar-preview-card')) return;
             if (app.isUrl) {
@@ -822,8 +914,7 @@ function renderTaskbar() {
                 }
             }
         });
-        
-        // Hover Previews
+
         if (isRunning && !app.isUrl) {
             const previewCard = document.createElement('div');
             previewCard.className = 'taskbar-preview-card';
@@ -851,92 +942,91 @@ function renderTaskbar() {
             });
             btn.appendChild(previewCard);
         }
-        
         list.appendChild(btn);
     });
 }
 
 // ---------- File Explorer ----------
-function initFileExplorer(windowEl){ 
-    const grid=windowEl.querySelector('#projectsGrid'); 
-    const viewToggle=windowEl.querySelector('#explorerViewToggle'); 
-    const sortSelect=windowEl.querySelector('#explorerSort'); 
-    const searchInput=windowEl.querySelector('.toolbar-search'); 
-    const categoryItems=windowEl.querySelectorAll('.sidebar-item'); 
-    let currentCategory='all'; 
-    let currentView='grid'; 
-    
-    if(grid) renderProjects(grid,state.projects,'all',currentView); 
-    
-    if(viewToggle) viewToggle.addEventListener('change',(e)=>{ 
-        currentView=e.target.value; 
-        if(grid) grid.className=`projects-grid ${currentView}-view`; 
-        renderProjects(grid,state.projects,currentCategory,currentView); 
-    }); 
-    
-    categoryItems.forEach(item=>{ 
-        item.addEventListener('click',()=>{ 
-            categoryItems.forEach(i=>i.classList.remove('active')); 
-            item.classList.add('active'); 
-            currentCategory=item.dataset.category; 
-            renderProjects(grid,state.projects,currentCategory,currentView); 
-        }); 
-    }); 
-    
-    if(searchInput) searchInput.addEventListener('input',(e)=>{ 
-        const v=e.target.value.toLowerCase(); 
-        const filtered=state.projects.filter(p=> 
-            (p.title||'').toLowerCase().includes(v) || 
-            (p.description||'').toLowerCase().includes(v) ||
+function initFileExplorer(windowEl) {
+    const grid = windowEl.querySelector('#projectsGrid');
+    const viewToggle = windowEl.querySelector('#explorerViewToggle');
+    const sortSelect = windowEl.querySelector('#explorerSort');
+    const searchInput = windowEl.querySelector('.toolbar-search');
+    const categoryItems = windowEl.querySelectorAll('.sidebar-item');
+    let currentCategory = 'all';
+    let currentView = 'grid';
+
+    if (grid) renderProjects(grid, state.projects, 'all', currentView);
+
+    if (viewToggle) viewToggle.addEventListener('change', (e) => {
+        currentView = e.target.value;
+        if (grid) grid.className = `projects-grid ${currentView}-view`;
+        renderProjects(grid, state.projects, currentCategory, currentView);
+    });
+
+    categoryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            categoryItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            currentCategory = item.dataset.category;
+            renderProjects(grid, state.projects, currentCategory, currentView);
+        });
+    });
+
+    if (searchInput) searchInput.addEventListener('input', (e) => {
+        const v = e.target.value.toLowerCase();
+        const filtered = state.projects.filter(p =>
+            (p.title || '').toLowerCase().includes(v) ||
+            (p.description || '').toLowerCase().includes(v) ||
             (p.techStack || p.tech || []).some(t => t.toLowerCase().includes(v))
-        ); 
-        renderProjects(grid,filtered,currentCategory,currentView); 
-    }); 
-    
-    if(sortSelect) sortSelect.addEventListener('change',(e)=>{ 
-        const sorted=[...state.projects]; 
+        );
+        renderProjects(grid, filtered, currentCategory, currentView);
+    });
+
+    if (sortSelect) sortSelect.addEventListener('change', (e) => {
+        const sorted = [...state.projects];
         const getDateValue = (dateObj) => {
             if (!dateObj) return new Date(0);
             if (typeof dateObj.toDate === 'function') return dateObj.toDate();
             return new Date(dateObj);
         };
-        if(e.target.value==='name') sorted.sort((a,b)=> (a.title||'').localeCompare(b.title||'')); 
-        else if(e.target.value==='date') sorted.sort((a,b)=> getDateValue(b.dateAdded) - getDateValue(a.dateAdded)); 
-        else if(e.target.value==='category') sorted.sort((a,b)=> (a.category||'').localeCompare(b.category||'')); 
-        renderProjects(grid,sorted,currentCategory,currentView); 
-    }); 
+
+        if (e.target.value === 'name') sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        else if (e.target.value === 'date') sorted.sort((a, b) => getDateValue(b.dateAdded) - getDateValue(a.dateAdded));
+        else if (e.target.value === 'category') sorted.sort((a, b) => (a.category || '').localeCompare(b.category || ''));
+        renderProjects(grid, sorted, currentCategory, currentView);
+    });
 }
 
-function renderProjects(container,projects,category,view){ 
-    if(!container) return; 
-    container.innerHTML=''; 
-    
-    let filtered=projects; 
-    if(category!=='all') {
-        filtered=projects.filter(p=>(p.category||'').toLowerCase()===category.toLowerCase());
+function renderProjects(container, projects, category, view) {
+    if (!container) return;
+    container.innerHTML = '';
+    let filtered = projects;
+
+    if (category !== 'all') {
+        filtered = projects.filter(p => (p.category || '').toLowerCase() === category.toLowerCase());
     }
-    
+
     if (filtered.length === 0) {
         container.innerHTML = '<div class="explorer-empty">No projects found in this folder.</div>';
         return;
     }
-    
-    filtered.forEach(project=>{ 
-        const card=document.createElement('div'); 
-        card.className=`project-card ${view}-view-card`; 
-        
+
+    filtered.forEach(project => {
+        const card = document.createElement('div');
+        card.className = `project-card ${view}-view-card`;
         const thumb = project.thumbnail || 'https://via.placeholder.com/300x180?text=Project+Thumbnail';
         const techStack = project.techStack || project.tech || [];
         const techBadges = techStack.map(t => `<span class="tech-badge">${t}</span>`).join('');
         const catLabel = project.category ? project.category.toUpperCase() : 'WEB';
-        
-        card.innerHTML=`
+
+        card.innerHTML = `
             <div class="project-card-thumb" style="background-image: url('${thumb}');">
                 <span class="project-category-badge">${catLabel}</span>
             </div>
             <div class="project-card-content">
-                <h4 class="project-card-title">${project.title||''}</h4>
-                <p class="project-card-desc">${project.description||''}</p>
+                <h4 class="project-card-title">${project.title || ''}</h4>
+                <p class="project-card-desc">${project.description || ''}</p>
                 <div class="project-card-tech">${techBadges}</div>
                 <div class="project-card-links">
                     ${project.githubUrl ? `<a href="${project.githubUrl}" target="_blank" class="explorer-card-btn gh-btn">🐙 GitHub</a>` : ''}
@@ -944,516 +1034,377 @@ function renderProjects(container,projects,category,view){
                 </div>
             </div>
         `;
-        
-        card.addEventListener('click', (e)=>{
+
+        card.addEventListener('click', (e) => {
             if (e.target.closest('.explorer-card-btn')) return;
             if (project.liveUrl) window.open(project.liveUrl, '_blank');
             else if (project.githubUrl) window.open(project.githubUrl, '_blank');
             else showProjectDetail(project);
         });
-        container.appendChild(card); 
-    }); 
+        container.appendChild(card);
+    });
 }
 
-function showProjectDetail(project){ 
-    alert(`${project.title||''}\n\n${project.description||''}\n\nTech: ${(project.techStack||project.tech||[]).join(', ')}\n\n${project.liveUrl?`Live: ${project.liveUrl}`:''}\n${project.githubUrl?`GitHub: ${project.githubUrl}`:''}`); 
+function showProjectDetail(project) {
+    alert(`${project.title || ''}\n\n${project.description || ''}\n\nTech: ${(project.techStack || project.tech || []).join(', ')}\n\n${project.liveUrl ? `Live: ${project.liveUrl}` : ''}\n${project.githubUrl ? `GitHub: ${project.githubUrl}` : ''}`);
 }
 
 // ---------- Settings (About Me) ----------
-function initSettings(windowEl){ 
-    const navItems=windowEl.querySelectorAll('.settings-nav-item'); 
-    const contentArea=windowEl.querySelector('#settingsContent'); 
-    
-    function showSection(section){ 
-        navItems.forEach(item=>item.classList.remove('active')); 
-        const activeItem=Array.from(navItems).find(i=>i.dataset.section===section); 
-        if(activeItem) activeItem.classList.add('active'); 
-        
-        let html=''; 
-        switch(section){ 
-            case 'general': 
-                html=`
+function initSettings(windowEl) {
+    const navItems = windowEl.querySelectorAll('.settings-nav-item');
+    const contentArea = windowEl.querySelector('#settingsContent');
+
+    function showSection(section) {
+        navItems.forEach(item => item.classList.remove('active'));
+        const activeItem = Array.from(navItems).find(i => i.dataset.section === section);
+        if (activeItem) activeItem.classList.add('active');
+
+        let html = '';
+        switch (section) {
+            case 'general':
+                html = `
                     <div class="about-profile-header">
-                        <img class="about-profile-img" src="./joseph_headshot.png" alt="${portfolioData.name}">
+                        <div class="about-profile-img" style="display: flex; align-items: center; justify-content: center; background: var(--win11-blue); color: white; font-size: 32px;">👨‍💻</div>
                         <div class="about-profile-info">
-                            <h2 class="about-profile-name">${portfolioData.name}</h2>
-                            <p class="about-profile-title">${portfolioData.title}</p>
-                            <div class="about-social-links">
-                                <a href="${portfolioData.social.github}" target="_blank" class="about-social-link">GitHub</a>
-                                <a href="${portfolioData.social.linkedin}" target="_blank" class="about-social-link">LinkedIn</a>
-                            </div>
+                            <h3>${portfolioData.name}</h3>
+                            <p class="text-muted" style="margin: 0;">${portfolioData.title}</p>
                         </div>
                     </div>
-                    <h3>About Me</h3>
-                    <div class="settings-item">
-                        <div class="settings-item-label">Bio</div>
-                        <div class="settings-item-value" style="line-height:1.6;font-size:13px;">${portfolioData.bio}</div>
+                    <div class="settings-section-title">About Me</div>
+                    <p style="font-size: 14px; line-height: 1.6; color: var(--text-color); opacity: 0.85;">${portfolioData.bio}</p>
+                    <div class="settings-section-title" style="margin-top: 24px;">System Information</div>
+                    <div style="background: var(--win11-darkgray); border-radius: 6px; border: 1px solid var(--border-color); padding: 12px; font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display:flex; justify-content:space-between;"><span style="opacity:0.6;">OS Name:</span><span>PortfolioOS (Windows 11 Edition)</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="opacity:0.6;">Version:</span><span>2026.3.1</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="opacity:0.6;">Kernel:</span><span>JavaScript ES6 Monolithic</span></div>
                     </div>
-                    <div class="settings-item">
-                        <div class="settings-item-label">Email</div>
-                        <div class="settings-item-value">${portfolioData.email}</div>
-                    </div>
-                `; 
-                break; 
-            case 'experience': 
-                html='<h3>Experience</h3>'; 
-                portfolioData.experience.forEach(exp=>{ 
-                    html+=`<div class="settings-item"><div class="settings-item-label" style="font-weight:600;font-size:14px;color:var(--win11-light-blue);">${exp.title}</div><div class="settings-item-value" style="font-size:12px;margin-top:4px;"><strong>${exp.company}</strong> (${exp.duration})</div></div>`; 
-                }); 
-                break; 
-            case 'education': 
-                html='<h3>Education</h3>'; 
-                portfolioData.education.forEach(edu=>{ 
-                    html+=`<div class="settings-item"><div class="settings-item-label" style="font-weight:600;font-size:14px;color:var(--win11-light-blue);">${edu.school}</div><div class="settings-item-value" style="font-size:12px;margin-top:4px;"><strong>${edu.degree}</strong> - ${edu.year}</div></div>`; 
-                }); 
-                break; 
-            case 'skills': 
-                html='<h3>Skills Overview</h3><div class="settings-item" style="display:flex;flex-wrap:wrap;gap:8px;">'; 
-                portfolioData.skills.forEach(skill=>{ 
-                    html+=`<span style="padding:6px 12px;background:var(--input-bg);border:1px solid var(--border-color);border-radius:20px;color:var(--text-color);font-size:12px;">✓ ${skill}</span>`; 
-                }); 
-                html+='</div>'; 
-                break; 
-            case 'achievements': 
-                html=`<h3>Achievements</h3><div class="settings-item"><div class="settings-item-label">Projects Completed</div><div class="settings-item-value">${state.projects.length}+</div></div>`; 
-                break; 
-        } 
-        if(contentArea) contentArea.innerHTML=html; 
-    } 
-    navItems.forEach(item=>{ 
-        item.addEventListener('click', ()=>showSection(item.dataset.section)); 
-    }); 
-    showSection('general'); 
+                `;
+                break;
+            case 'education':
+                html = `<div class="settings-section-title">Education & Certifications</div>`;
+                portfolioData.education.forEach(edu => {
+                    html += `
+                        <div style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                            <h5 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${edu.degree}</h5>
+                            <div style="font-size: 13px; opacity: 0.7; display: flex; justify-content: space-between;">
+                                <span>${edu.school}</span>
+                                <span>${edu.year}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                break;
+            case 'experience':
+                html = `<div class="settings-section-title">Work Experience</div>`;
+                portfolioData.experience.forEach(exp => {
+                    html += `
+                        <div style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                            <h5 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${exp.title}</h5>
+                            <div style="font-size: 13px; opacity: 0.7; display: flex; justify-content: space-between;">
+                                <span>${exp.company}</span>
+                                <span>${exp.duration}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                break;
+        }
+        if (contentArea) contentArea.innerHTML = html;
+    }
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => showSection(item.dataset.section));
+    });
+
+    showSection('general');
 }
 
 // ---------- Task Manager (Skills) ----------
 function initTaskManager(windowEl) {
-    const tabs = windowEl.querySelectorAll('.tm-tab');
-    const skillsList = windowEl.querySelector('#tmSkillsList');
-    const perfSpec = windowEl.querySelector('#tmPerfSpec');
-    
-    const skillsData = {
-        languages: [
-            { name: 'JavaScript', val: 95 },
-            { name: 'Python', val: 85 },
-            { name: 'SQL', val: 80 },
-            { name: 'HTML & CSS', val: 90 }
-        ],
-        frameworks: [
-            { name: 'React', val: 90 },
-            { name: 'Node.js', val: 85 },
-            { name: 'Express.js', val: 80 },
-            { name: 'Bootstrap', val: 90 }
-        ],
-        databases: [
-            { name: 'Firebase Firestore', val: 90 },
-            { name: 'PostgreSQL', val: 80 },
-            { name: 'MongoDB', val: 75 }
-        ],
-        tools: [
-            { name: 'Git', val: 85 },
-            { name: 'Docker', val: 70 },
-            { name: 'Vite / Webpack', val: 80 },
-            { name: 'Vercel / Firebase Hosting', val: 85 }
-        ]
-    };
-    
-    const loadTab = (tabName) => {
-        tabs.forEach(t => t.classList.remove('active'));
-        const activeTab = windowEl.querySelector(`.tm-tab[data-tab="${tabName}"]`);
-        if (activeTab) activeTab.classList.add('active');
-        
-        const labels = { 
-            languages: 'CPU - Languages', 
-            frameworks: 'Memory - Frameworks', 
-            databases: 'Disk - Databases', 
-            tools: 'Network - Tools' 
-        };
-        if (perfSpec) perfSpec.textContent = labels[tabName];
-        
-        if (!skillsList) return;
-        skillsList.innerHTML = '';
-        
-        const skills = skillsData[tabName] || [];
-        skills.forEach(skill => {
-            const item = document.createElement('div');
-            item.className = 'tm-skill-item';
-            item.innerHTML = `
-                <div class="tm-skill-header">
-                    <span class="tm-skill-name">${skill.name}</span>
-                    <span class="tm-skill-pct">${skill.val}%</span>
-                </div>
-                <div class="tm-skill-bar-container">
-                    <div class="tm-skill-bar" style="width: 0%;"></div>
-                </div>
-            `;
-            skillsList.appendChild(item);
-            
-            setTimeout(() => {
-                const bar = item.querySelector('.tm-skill-bar');
-                if (bar) bar.style.width = `${skill.val}%`;
-            }, 50);
-        });
-    };
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            loadTab(tab.dataset.tab);
-        });
+    const list = windowEl.querySelector('#taskManagerList');
+    if (!list) return;
+    list.innerHTML = '';
+
+    portfolioData.skills.forEach(skill => {
+        const row = document.createElement('div');
+        row.className = 'task-manager-row';
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = '2fr 1fr 1fr';
+        row.style.padding = '8px 16px';
+        row.style.fontSize = '13px';
+        row.style.borderBottom = '1px solid var(--border-color)';
+        row.style.color = 'var(--text-color)';
+
+        // Simulate usage metrics
+        const cpu = Math.floor(Math.random() * 25) + 5;
+        const ram = (Math.random() * 120 + 40).toFixed(1);
+
+        row.innerHTML = `
+            <div style="display:flex; align-items:center; gap:8px;"><span>📊</span> <strong>${skill}</strong></div>
+            <div style="color: var(--win11-light-blue);">${cpu}%</div>
+            <div>${ram} MB</div>
+        `;
+        list.appendChild(row);
     });
-    
-    loadTab('languages');
 }
 
-// ---------- Terminal ----------
-function initTerminal(windowEl){ 
-    const output=windowEl.querySelector('#terminalOutput'); 
-    const input=windowEl.querySelector('#terminalInput'); 
-    if(!output||!input) return; 
-    
-    output.innerHTML=`<div class="terminal-line">C:\\Users\\Developer> whoami</div><div class="terminal-line">${portfolioData.name} - ${portfolioData.title}</div><div class="terminal-line"></div><div class="terminal-line" style="color:#0DFFFF;font-size:11px;opacity:0.7;">Type \"help\" for available commands</div><div class="terminal-line"></div>`; 
-    
-    input.addEventListener('keydown',(e)=>{ 
-        if(e.key==='Enter'){ 
-            const command=input.value.trim(); 
-            state.commandHistory.push(command); 
-            state.historyIndex=state.commandHistory.length; 
-            executeTerminalCommand(command,output); 
-            input.value=''; 
-        } else if(e.key==='ArrowUp' && state.historyIndex>0){ 
-            state.historyIndex--; 
-            input.value=state.commandHistory[state.historyIndex]; 
-        } else if(e.key==='ArrowDown' && state.historyIndex<state.commandHistory.length-1){ 
-            state.historyIndex++; 
-            input.value=state.commandHistory[state.historyIndex]; 
-        } 
-    }); 
-    input.focus(); 
+// ---------- Notepad (Resume) ----------
+function initNotepad(windowEl) {
+    const area = windowEl.querySelector('#notepadArea');
+    if (area) {
+        area.value = portfolioData.resume;
+    }
 }
 
-function executeTerminalCommand(command,outputEl){ 
-    const line=document.createElement('div'); 
-    line.className='terminal-line'; 
-    line.innerHTML=`C:\\Users\\Developer> ${command}`; 
-    outputEl.appendChild(line); 
-    
-    const resultLine=document.createElement('div'); 
-    resultLine.className='terminal-line'; 
-    
-    const cmd = command.trim().toLowerCase();
-    switch(cmd){ 
-        case 'help': 
-            resultLine.innerHTML=`Available commands:\nwhoami   - Display bio and user info\nskills   - List all developer skills\nprojects - List projects from Firestore\ncontact  - Show contact email\nsocials  - Display social URL links (clickable)\nclear    - Clear terminal`; 
-            break; 
-        case 'whoami': 
-            resultLine.innerHTML=`<strong>Name:</strong> ${portfolioData.name}\n<strong>Title:</strong> ${portfolioData.title}\n<strong>Bio:</strong> ${portfolioData.bio}`; 
-            break; 
-        case 'skills': 
-            resultLine.innerHTML=portfolioData.skills.join(', '); 
-            break; 
-        case 'projects': 
-            resultLine.innerHTML=state.projects.map(p=>`- <strong>${p.title}</strong>: ${p.description.substring(0,80)}...`).join('\n'); 
-            break; 
-        case 'contact': 
-            resultLine.innerHTML=`<strong>Email:</strong> <a href="mailto:${portfolioData.email}" style="color:#0DFFFF;" target="_blank">${portfolioData.email}</a>`; 
-            break; 
-        case 'socials': 
-            resultLine.innerHTML=`<strong>GitHub:</strong> <a href="${portfolioData.social.github}" target="_blank" style="color:#0DFFFF;">${portfolioData.social.github}</a>\n<strong>LinkedIn:</strong> <a href="${portfolioData.social.linkedin}" target="_blank" style="color:#0DFFFF;">${portfolioData.social.linkedin}</a>`; 
-            break; 
-        case 'clear': 
-            outputEl.innerHTML=''; 
-            return; 
-        default: 
-            resultLine.innerHTML=`Command not found: "${command}". Type "help" for available commands.`; 
-    } 
-    outputEl.appendChild(resultLine); 
-    outputEl.scrollTop=outputEl.scrollHeight; 
-}
-
-// ---------- Mail App (Contact) ----------
+// ---------- Mail (Contact) ----------
 function initMail(windowEl) {
-    const folders = windowEl.querySelectorAll('.mail-folder');
-    const mailList = windowEl.querySelector('#mailList');
-    const mailWelcomeView = windowEl.querySelector('#mailWelcomeView');
-    const mailComposeView = windowEl.querySelector('#mailComposeView');
-    const newMailBtn = windowEl.querySelector('#mailNewBtn');
-    const mailForm = windowEl.querySelector('#mailFormElement');
-    const mailListItems = windowEl.querySelectorAll('.mail-list-item');
-    
-    folders.forEach(folder => {
-        folder.addEventListener('click', () => {
-            folders.forEach(f => f.classList.remove('active'));
-            folder.classList.add('active');
-            const fName = folder.dataset.folder;
-            
-            if (fName === 'inbox') {
-                mailList.style.display = '';
-                if (mailWelcomeView) mailWelcomeView.classList.remove('hidden');
-                if (mailComposeView) mailComposeView.classList.add('hidden');
-            } else {
-                mailList.style.display = 'none';
-                if (mailWelcomeView) mailWelcomeView.classList.add('hidden');
-                if (mailComposeView) mailComposeView.classList.remove('hidden');
-            }
-        });
-    });
-    
-    mailListItems.forEach(item => {
-        item.addEventListener('click', () => {
-            mailListItems.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            
-            const mailId = item.dataset.mail;
-            if (mailId === 'welcome') {
-                if (mailWelcomeView) {
-                    mailWelcomeView.querySelector('h3').textContent = 'Welcome to my Portfolio Mail!';
-                    mailWelcomeView.querySelector('.mail-view-body').innerHTML = `
-                        <p>Hi there,</p>
-                        <p>Thanks for visiting my Windows 11 portfolio! You can use this Mail application to send me a message directly. Just click the "New mail" button in the sidebar or fill out the compose form.</p>
-                        <p>Looking forward to connecting with you!</p>
-                        <p>Best regards,<br>Joseph</p>
-                    `;
-                    mailWelcomeView.classList.remove('hidden');
-                }
-                if (mailComposeView) mailComposeView.classList.add('hidden');
-            } else if (mailId === 'google') {
-                if (mailWelcomeView) {
-                    mailWelcomeView.querySelector('h3').textContent = 'Software Engineer Opportunity';
-                    mailWelcomeView.querySelector('.mail-view-body').innerHTML = `
-                        <p>Hi Joseph,</p>
-                        <p>We reviewed your impressive software engineering and accounting portfolio. We would love to schedule a preliminary screening call to discuss our engineering open roles.</p>
-                        <p>Please send us your resume or coordinate a time with us.</p>
-                        <p>Best regards,<br>Google Recruiting Team</p>
-                    `;
-                    mailWelcomeView.classList.remove('hidden');
-                }
-                if (mailComposeView) mailComposeView.classList.add('hidden');
-            }
-        });
-    });
-    
-    if (newMailBtn) {
-        newMailBtn.addEventListener('click', () => {
-            folders.forEach(f => f.classList.remove('active'));
-            const sentFolder = Array.from(folders).find(f => f.dataset.folder === 'sent');
-            if (sentFolder) sentFolder.classList.add('active');
-            
-            mailList.style.display = 'none';
-            if (mailWelcomeView) mailWelcomeView.classList.add('hidden');
-            if (mailComposeView) mailComposeView.classList.remove('hidden');
-            if (mailForm) mailForm.reset();
-        });
-    }
-    
-    if (mailForm) {
-        mailForm.addEventListener('submit', (e) => {
-            handleMailSubmit(e, windowEl);
-        });
-    }
+    // Left empty for system compliance hooks
 }
 
-function handleMailSubmit(e, windowEl) {
+function handleMailSubmit(e, container) {
     e.preventDefault();
-    const form = e.target;
-    const nameEl = form.querySelector('#mailFromName');
-    const emailEl = form.querySelector('#mailFromEmail');
-    const subjectEl = form.querySelector('#mailSubject');
-    const messageEl = form.querySelector('#mailMessage');
-    const statusEl = windowEl.querySelector('#mailStatus');
-    
-    if (!nameEl || !emailEl || !subjectEl || !messageEl || !statusEl) return;
-    
-    const name = nameEl.value;
-    const email = emailEl.value;
-    const subject = subjectEl.value;
-    const message = messageEl.value;
-    
-    statusEl.className = 'alert alert-info';
-    statusEl.textContent = 'Sending message...';
-    statusEl.classList.remove('hidden');
-    
-    const msgData = {
-        name,
-        email,
-        subject,
-        message,
-        timestamp: serverTimestamp()
-    };
-    
-    try {
-        addDoc(collection(window.db, 'messages'), msgData)
-            .then(() => {
-                statusEl.className = 'alert alert-success';
-                statusEl.textContent = '✅ Message sent successfully! Thank you.';
-                form.reset();
-                addNotification(`Message from ${name} sent!`);
-                showToast('Mail', `Message from ${name} successfully sent!`, '📧');
-                
-                setTimeout(() => {
-                    statusEl.classList.add('hidden');
-                }, 5000);
-            })
-            .catch((error) => {
-                console.error('Error writing document: ', error);
-                statusEl.className = 'alert alert-danger';
-                statusEl.textContent = `❌ Error sending message: ${error.message}`;
-            });
-    } catch (err) {
-        console.error('Firestore not initialized: ', err);
-        statusEl.className = 'alert alert-danger';
-        statusEl.textContent = '❌ Error: Firebase database is not available.';
+    const nameInput = container.querySelector('#contactName');
+    const emailInput = container.querySelector('#contactEmail');
+    const msgInput = container.querySelector('#contactMessage');
+
+    if (!nameInput || !emailInput || !msgInput) return;
+
+    const n = nameInput.value.trim();
+    const em = emailInput.value.trim();
+    const msg = msgInput.value.trim();
+
+    if (!n || !em || !msg) {
+        showToast('Form Error', 'Please verify your contact fields.', '⚠️');
+        return;
     }
-}
 
-// ---------- Photos ----------
-function initPhotos(windowEl){ 
-    const grid = windowEl.querySelector('#galleryGrid'); 
-    if(!grid) return; 
-    const makesvg = (color, label) => `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='${encodeURIComponent(color)}'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='white'>${encodeURIComponent(label)}</text></svg>`;
-    const galleryItems = [ 
-        {src: makesvg('#0078D4','Project 1'), alt:'Project 1'}, 
-        {src: makesvg('#107C10','Project 2'), alt:'Project 2'}, 
-        {src: makesvg('#E81123','Screenshot'), alt:'Screenshot'}, 
-        {src: makesvg('#5C2D91','Certificate'), alt:'Certificate'},
-        {src: makesvg('#FF8C00','Design'), alt:'Design'},
-        {src: makesvg('#00B4D8','Prototype'), alt:'Prototype'}
-    ]; 
-    galleryItems.forEach((item,i)=>{ 
-        const gi=document.createElement('div'); 
-        gi.className='gallery-item'; 
-        gi.innerHTML=`<img src="${item.src}" alt="${item.alt}">`; 
-        gi.addEventListener('click',()=>openLightbox(i,galleryItems)); 
-        grid.appendChild(gi); 
-    }); 
-}
-function openLightbox(index,items){ const lightbox=document.getElementById('lightbox'); const image=document.getElementById('lightboxImage'); if(!lightbox||!image) return; let currentIndex=index; function updateImage(){ image.src=items[currentIndex].src; } updateImage(); lightbox.classList.remove('hidden'); const close=document.querySelector('.lightbox-close'); const prev=document.querySelector('.lightbox-prev'); const next=document.querySelector('.lightbox-next'); if(close) close.onclick=()=>lightbox.classList.add('hidden'); if(prev) prev.onclick=()=>{ currentIndex=(currentIndex-1+items.length)%items.length; updateImage(); }; if(next) next.onclick=()=>{ currentIndex=(currentIndex+1)%items.length; updateImage(); }; }
-
-// ---------- Notepad ----------
-function initNotepad(windowEl){ const content=windowEl.querySelector('#resumeContent'); const printBtn=windowEl.querySelector('#printResume'); if(content) content.textContent=portfolioData.resume; if(printBtn) printBtn.addEventListener('click',()=>window.print()); }
-
-// ---------- Admin ----------
-function initAdmin(windowEl){ const loginForm=windowEl.querySelector('#adminLoginForm'); const loginBtn=windowEl.querySelector('#adminLoginBtn'); const adminPanel=windowEl.querySelector('#adminPanel'); const logoutBtn=windowEl.querySelector('#adminLogout'); const addProjectBtn=windowEl.querySelector('#addProjectBtn'); const projectForm=windowEl.querySelector('#adminProjectForm'); const projectFormElement=windowEl.querySelector('#projectFormElement'); const cancelBtn=windowEl.querySelector('#cancelProjectForm'); if(loginBtn) loginBtn.addEventListener('click',(e)=>{ e.preventDefault(); adminLogin(windowEl); }); if(logoutBtn) logoutBtn.addEventListener('click',()=>{ try{ signOut(window.auth); }catch(e){} if(loginForm) loginForm.classList.remove('hidden'); if(adminPanel) adminPanel.classList.add('hidden'); if(projectForm) projectForm.classList.add('hidden'); }); if(addProjectBtn) addProjectBtn.addEventListener('click',()=>{ if(projectForm) projectForm.classList.remove('hidden'); if(projectFormElement) projectFormElement.reset(); const pid=windowEl.querySelector('#projectId'); if(pid) pid.value=''; }); if(cancelBtn) cancelBtn.addEventListener('click',()=>{ if(projectForm) projectForm.classList.add('hidden'); }); if(projectFormElement) projectFormElement.addEventListener('submit',(e)=>{ e.preventDefault(); saveProject(windowEl); }); }
-
-function adminLogin(windowEl){
-    const emailEl    = windowEl.querySelector('#adminEmail');
-    const passwordEl = windowEl.querySelector('#adminPassword');
-    const errorDiv   = windowEl.querySelector('#adminError');
-    const email    = emailEl    ? emailEl.value    : '';
-    const password = passwordEl ? passwordEl.value : '';
-    try{
-        signInWithEmailAndPassword(window.auth, email, password).then(()=>{
-            const lf = windowEl.querySelector('#adminLoginForm');
-            const ap = windowEl.querySelector('#adminPanel');
-            if(lf) lf.classList.add('hidden');
-            if(ap) ap.classList.remove('hidden');
-            loadAdminProjects(windowEl);
-        }).catch(error=>{
-            if(errorDiv){ errorDiv.textContent=error.message; errorDiv.classList.remove('hidden'); }
+    if (window.db) {
+        addDoc(collection(window.db, "messages"), {
+            name: n,
+            email: em,
+            message: msg,
+            timestamp: serverTimestamp()
+        }).then(() => {
+            showToast('Message Sent', 'Thank you! Your message was submitted successfully.', '📧');
+            nameInput.value = '';
+            emailInput.value = '';
+            msgInput.value = '';
+        }).catch(err => {
+            console.error("Error saving message: ", err);
+            showToast('Submission Failure', 'Database write error.', '❌');
         });
-    }catch(e){
-        if(errorDiv) errorDiv.textContent='Auth not available';
+    } else {
+        showToast('Database Error', 'Firebase database connection drop.', '⚠️');
     }
 }
 
-function loadAdminProjects(windowEl){ const list=windowEl.querySelector('#projectsList'); if(!list) return; list.innerHTML=''; state.projects.forEach(project=>{ const item=document.createElement('div'); item.className='project-item'; item.innerHTML=`<div class="project-item-name">${project.title||''}</div><div class="project-item-actions"><button class="btn btn-sm btn-primary" onclick="editProject('${project.id}')">Edit</button><button class="btn btn-sm btn-danger" onclick="deleteProject('${project.id}')">Delete</button></div>`; list.appendChild(item); }); }
-
-function saveProject(windowEl){
-    const q = (sel) => { const el = windowEl.querySelector(sel); return el ? el.value : ''; };
-    const id = q('#projectId');
-    const project = {
-        title:       q('#projectTitle'),
-        description: q('#projectDescription'),
-        category:    q('#projectCategory') || 'Web',
-        techStack:   q('#projectTech').split(',').map(t=>t.trim()).filter(Boolean),
-        thumbnail:   q('#projectThumbnail'),
-        liveUrl:     q('#projectLiveUrl'),
-        githubUrl:   q('#projectGithubUrl'),
-        featured:    !!(windowEl.querySelector('#projectFeatured') && windowEl.querySelector('#projectFeatured').checked),
-        dateAdded:   id ? (state.projects.find(p => p.id === id)?.dateAdded || serverTimestamp()) : serverTimestamp()
-    };
-    try{
-        if(id) updateDoc(doc(window.db,'projects',id), project);
-        else   addDoc(collection(window.db,'projects'), project);
-    }catch(e){ console.warn('Firestore write skipped', e); }
-    const pf = windowEl.querySelector('#adminProjectForm');
-    if(pf) pf.classList.add('hidden');
-    loadProjects();
+// ---------- Photos (Gallery) ----------
+function initPhotos(windowEl) {
+    // Left template ready for asset hooks
 }
 
-window.editProject=function(id){ 
-    const project=state.projects.find(p=>p.id===id); 
-    if(project){ 
-        const form=document.querySelector('#adminProjectForm'); 
-        if(!form) return;
-        const pid=form.querySelector('#projectId'); 
-        if(pid) pid.value=id; 
-        const title=form.querySelector('#projectTitle'); 
-        if(title) title.value=project.title||''; 
-        const desc=form.querySelector('#projectDescription'); 
-        if(desc) desc.value=project.description||''; 
-        const cat=form.querySelector('#projectCategory'); 
-        if(cat) cat.value=project.category||''; 
-        const tech=form.querySelector('#projectTech'); 
-        if(tech) tech.value=(project.techStack||project.tech||[]).join(', '); 
-        const thumb=form.querySelector('#projectThumbnail'); 
-        if(thumb) thumb.value=project.thumbnail||''; 
-        const live=form.querySelector('#projectLiveUrl'); 
-        if(live) live.value=project.liveUrl||''; 
-        const gh=form.querySelector('#projectGithubUrl'); 
-        if(gh) gh.value=project.githubUrl||''; 
-        const feat=form.querySelector('#projectFeatured'); 
-        if(feat) feat.checked=project.featured||false; 
-        form.classList.remove('hidden'); 
-    } 
-};
+// ---------- Terminal app ----------
+function initTerminal(windowEl) {
+    const body = windowEl.querySelector('.terminal-body');
+    const input = windowEl.querySelector('.terminal-input');
+    if (!body || !input) return;
 
-window.deleteProject=function(id){ if(confirm('Are you sure?')){ try{ deleteDoc(doc(window.db,'projects',id)); }catch(e){ console.warn('Delete skipped',e); } loadProjects(); } };
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const cmd = input.value.trim();
+            input.value = '';
+            if (cmd === '') return;
 
-// ---------- Firebase integration ----------
-function loadProjects(){ 
-    try{ 
-        const q=query(collection(window.db,'projects'), orderBy('dateAdded','desc')); 
-        onSnapshot(q, (snapshot)=>{ 
-            state.projects=[]; 
-            snapshot.forEach(d=>{
-                const data = d.data();
-                state.projects.push({ 
-                    id: d.id, 
-                    ...data,
-                    techStack: data.techStack || data.tech || []
+            state.commandHistory.push(cmd);
+            state.historyIndex = state.commandHistory.length;
+
+            const cmdRow = document.createElement('div');
+            cmdRow.style.color = '#ffffff';
+            cmdRow.textContent = `C:\\Users\\Guest> ${cmd}`;
+            body.appendChild(cmdRow);
+
+            const outRow = document.createElement('div');
+            outRow.style.marginBottom = '8px';
+
+            const parts = cmd.toLowerCase().split(' ');
+            const baseCmd = parts[0];
+
+            switch (baseCmd) {
+                case 'help':
+                    outRow.style.color = '#888888';
+                    outRow.innerHTML = `Available Commands:<br>
+                    - <strong>help</strong>: Show command configurations<br>
+                    - <strong>cls</strong> / <strong>clear</strong>: Clean console buffer<br>
+                    - <strong>about</strong> / <strong>skills</strong> / <strong>projects</strong>: Launch applications<br>
+                    - <strong>theme</strong>: Toggle light/dark settings<br>
+                    - <strong>neofetch</strong>: Print portfolio device parameters`;
+                    break;
+                case 'cls':
+                case 'clear':
+                    body.innerHTML = '';
+                    return;
+                case 'about':
+                case 'projects':
+                case 'skills':
+                    openApp(baseCmd);
+                    outRow.style.color = '#55ff55';
+                    outRow.textContent = `Launching window execution context: ${baseCmd}`;
+                    break;
+                case 'theme':
+                    const themeBtn = document.getElementById('themeToggle');
+                    if (themeBtn) themeBtn.click();
+                    outRow.style.color = '#55ff55';
+                    outRow.textContent = 'System environment theme changed.';
+                    break;
+                case 'neofetch':
+                    outRow.style.color = '#4facfe';
+                    outRow.style.whiteSpace = 'pre';
+                    outRow.textContent = `   🪟   User: ${portfolioData.name}
+  ████  Title: ${portfolioData.title}
+  ████  OS: PortfolioOS v2026.3.1
+        Shell: Javascript-Terminal
+        Resolution: ${window.innerWidth}x${window.innerHeight}
+        Engine: Chrome V8 Engine Match`;
+                    break;
+                default:
+                    outRow.style.color = '#ff5555';
+                    outRow.textContent = `'${baseCmd}' is not recognized as an internal or external command loop.`;
+            }
+
+            body.appendChild(outRow);
+            body.scrollTop = body.scrollHeight;
+        }
+    });
+}
+
+// ---------- Admin Dashboard Panel Management ----------
+function initAdmin(windowEl) {
+    const authBox = windowEl.querySelector('#adminAuthBox');
+    const adminPanel = windowEl.querySelector('#adminPanel');
+    if (!authBox || !adminPanel) return;
+
+    if (state.currentUser && state.currentUser.email === 'jossypremium.2016@gmail.com') {
+        authBox.classList.add('hidden');
+        adminPanel.classList.remove('hidden');
+        loadAdminPanelData(adminPanel);
+    } else {
+        authBox.classList.remove('hidden');
+        adminPanel.classList.add('hidden');
+        authBox.innerHTML = `
+            <div style="text-align: center; padding: 24px; color: var(--text-color);">
+                <span style="font-size: 32px;">🔐</span>
+                <h4 style="margin: 12px 0 6px 0;">Administrative Check</h4>
+                <p style="font-size: 13px; opacity: 0.7; margin-bottom: 16px;">This window is restricted. Please login using your master profile credentials from the Windows Lock screen.</p>
+            </div>
+        `;
+    }
+}
+
+function loadAdminPanelData(container) {
+    const msgList = container.querySelector('#adminMessagesList');
+    if (!msgList) return;
+    msgList.innerHTML = '<div style="font-style:italic; opacity:0.5; font-size:13px; padding:10px;">Loading mailbox streams...</div>';
+
+    if (window.db) {
+        try {
+            const q = query(collection(window.db, "messages"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snapshot) => {
+                msgList.innerHTML = '';
+                if (snapshot.empty) {
+                    msgList.innerHTML = '<div style="font-style:italic; opacity:0.5; font-size:13px; padding:10px;">No message entries found inside cloud collections.</div>';
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'admin-message-card';
+                    item.style.padding = '10px';
+                    item.style.borderBottom = '1px solid var(--border-color)';
+                    item.style.fontSize = '13px';
+                    item.style.color = 'var(--text-color)';
+
+                    const timeStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'Recent';
+
+                    item.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <strong>${data.name || 'Anonymous'}</strong>
+                            <span style="font-size:11px; opacity:0.6;">${timeStr}</span>
+                        </div>
+                        <div style="font-size:12px; color:var(--win11-light-blue); margin-bottom:6px;">${data.email || ''}</div>
+                        <p style="margin:0; opacity:0.85; line-height:1.4;">${data.message || ''}</p>
+                    `;
+                    msgList.appendChild(item);
                 });
-            }); 
-            if(state.openWindows.has('projects')){ 
-                const win=state.openWindows.get('projects'); 
-                const grid=win.querySelector('#projectsGrid'); 
+            }, (error) => {
+                console.error("Snapshot error: ", error);
+                msgList.innerHTML = '<div style="color:var(--win11-blue); font-size:13px; padding:10px;">Access Refused: Firestore Rules are active.</div>';
+            });
+        } catch (e) {
+            msgList.innerHTML = '<div style="color:var(--win11-blue); padding:10px;">Initialisation tracking bug.</div>';
+        }
+    }
+}
+
+// ---------- Cloud Data Pull Real-time Sync ----------
+function loadProjects() {
+    if (!window.db) {
+        console.warn('Database object instance not bound yet.');
+        return;
+    }
+    try {
+        const q = query(collection(window.db, "projects"), orderBy("dateAdded", "desc"));
+        onSnapshot(q, (snapshot) => {
+            state.projects = [];
+            snapshot.forEach((doc) => {
+                state.projects.push({ id: doc.id, ...doc.data() });
+            });
+
+            if (state.openWindows.has('projects')) {
+                const win = state.openWindows.get('projects');
+                const grid = win.querySelector('#projectsGrid');
                 if (grid) {
-                    const viewToggle = win.querySelector('#explorerViewToggle');
-                    const currentView = viewToggle ? viewToggle.value : 'grid';
                     const activeSidebar = win.querySelector('.sidebar-item.active');
                     const currentCategory = activeSidebar ? activeSidebar.dataset.category : 'all';
-                    renderProjects(grid,state.projects,currentCategory,currentView); 
+                    const viewToggle = win.querySelector('#explorerViewToggle');
+                    const currentView = viewToggle ? viewToggle.value : 'grid';
+                    renderProjects(grid, state.projects, currentCategory, currentView);
                 }
-            } 
-            loadRecommendedProjects(); 
-            const adminWin = state.openWindows.get('admin');
-            if(adminWin) loadAdminProjects(adminWin);
-        }, (error)=>{ 
-            console.error('Error loading projects:',error); 
-            addNotification('Error loading projects'); 
-        }); 
-    }catch(err){ 
-        console.warn('loadProjects skipped - db not ready',err); 
+            }
+        }, (err) => {
+            console.error("Firestore read fault: ", err);
+            state.projects = [];
+            if (state.openWindows.has('projects')) {
+                const win = state.openWindows.get('projects');
+                const grid = win.querySelector('#projectsGrid');
+                if (grid) {
+                    renderProjects(grid, [], 'all', 'grid');
+                }
+            }
+            addNotification('Projects database sync skipped. Check rules configuration.');
+        });
+    } catch (err) {
+        console.warn('loadProjects skipped - db execution context dropped', err);
+    }
+}
+
+// ---------- Utilities ----------
+function changeWallpaper() { 
+    state.wallpaperIndex = (state.wallpaperIndex + 1) % wallpapers.length; 
+    const wp = document.querySelector('.desktop-wallpaper'); 
+    if (wp) wp.style.background = wallpapers[state.wallpaperIndex]; 
+}
+
+function shutdown() { 
+    if (confirm('Are you sure you want to shut down?')) location.reload(); 
+}
+
+function handleFormSubmit(e) { 
+    if (e.target && e.target.id === 'contactFormElement') {
+        handleMailSubmit(e, state.openWindows.get('contact') || document);
     } 
 }
 
-function checkAuthStatus(){ try{ onAuthStateChanged(window.auth,(user)=>{ state.currentUser=user; if(user){ const adminIcon=document.getElementById('adminIcon'); if(adminIcon) adminIcon.classList.remove('admin-hidden'); } }); }catch(e){ console.warn('Auth not initialized yet'); } }
-
-// ---------- Utilities ----------
-function changeWallpaper(){ state.wallpaperIndex=(state.wallpaperIndex+1)%wallpapers.length; const wp=document.querySelector('.desktop-wallpaper'); if(wp) wp.style.background=wallpapers[state.wallpaperIndex]; }
-function shutdown(){ if(confirm('Are you sure you want to shut down?')) location.reload(); }
-function handleFormSubmit(e){ if(e.target && e.target.id==='contactFormElement') handleMailSubmit(e, state.openWindows.get('contact') || document); }
-
-// ---------- Initialize ----------
+// ---------- Initialize Systems ----------
 initBoot();
 
 // End of file
