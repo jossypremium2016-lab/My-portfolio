@@ -47,8 +47,8 @@ const portfolioData = {
     ],
     skills: ['JavaScript', 'React', 'Node.js', 'Firebase', 'CSS3', 'Web Design', 'UI/UX', 'Git', 'SQL', 'Accounting', 'Python', 'Docker'],
     education: [
-        { school: 'University of Lagos', degree: 'BS Accounting', year: '2020' },
-        { school: 'ALX Software Engineering Program', degree: 'Software Engineering Diploma', year: '2022' }
+        {school: 'Kwara State Polytechic,Ilorin,Kwara State', degree: 'Higher National Diploma in Accountancy',year:'2010'}, {school: 'University Of Ilorin,Ilorin', degree: 'Post Graduate in Strategy Management',year:'2015'},{school: 'Ladoke Akintola University,Ogbomoso', degree: 'BS Accounting', year: '2018'},{school:'The institute of Chartered Accountants of Nigeria(ICAN) ',degree: 'Associate Member ',year:'2025' },
+        { school: 'SQI College Of ICT,Ogbomoso', degree: 'Software Engineering Diploma', year: '2026' }
     ],
     resume: `JOSEPH LAMIDE OGUNGBE
 Software Engineer & Accountant | jossypremium.2016@gmail.com
@@ -62,7 +62,7 @@ Financial Systems Engineer — Premium Solutions (2023 - Present)
 • Developed internal tools using Node.js and SQL to streamline reporting and audit preparation.
 • Maintained cloud databases and automated backups.
 
-Software Developer — TechFin Services (2021 - 2023)
+Software Developer — TechFin Services (2026 till date)
 • Built full-stack fintech portals using React, Express, and Firebase.
 • Collaborated with financial analysts to implement dynamic visual reporting and graphing dashboards.
 • Wrote scalable payment APIs.
@@ -250,10 +250,23 @@ function showLockScreen() {
     lockScreen.classList.remove('hidden');
     updateLockScreenTime();
     
-    const signInBtn = document.getElementById('googleSignInBtn');
-    if (signInBtn) {
-        signInBtn.replaceWith(signInBtn.cloneNode(true));
-        document.getElementById('googleSignInBtn').addEventListener('click', handleGoogleLogin);
+    // --- Google Button Binding ---
+    const googleBtn = document.getElementById('googleSignInBtn');
+    if (googleBtn) {
+        // Direct click assignment ensures browsers recognize it as an intentional user action
+        googleBtn.onclick = async (e) => {
+            e.preventDefault();
+            await handleGoogleLogin();
+        };
+    }
+
+    // --- GitHub Button Binding ---
+    const githubBtn = document.getElementById('githubSignInBtn');
+    if (githubBtn) {
+        githubBtn.onclick = async (e) => {
+            e.preventDefault();
+            await handleGithubLogin();
+        };
     }
 }
 
@@ -284,6 +297,35 @@ async function handleGoogleLogin() {
     }
 }
 
+async function handleGithubLogin() {
+    if (state.loginInProgress) return;
+
+    state.loginInProgress = true;
+    const signInBtn = document.getElementById('githubSignInBtn');
+    if (signInBtn) signInBtn.disabled = true;
+
+    try {
+        if (typeof window.signInWithGithub === 'function') {
+            const result = await window.signInWithGithub();
+            const user = result.user;
+            
+            // GitHub users sometimes don't have a display name configured, fallback to username/email
+            const identifier = user.displayName || user.reloadUserInfo.screenName || user.email;
+            showToast('Authenticated', `Welcome ${identifier}`, '🔐');
+            unlockScreen();
+        } else {
+            throw new Error("GitHub Sign-In configuration is missing in index.html");
+        }
+    } catch (error) {
+        console.error("Authentication Error: ", error);
+        if (error.code !== 'auth/cancelled-popup-request') {
+            showToast('Login Failed', error.message, '❌');
+        }
+    } finally {
+        state.loginInProgress = false;
+        if (signInBtn) signInBtn.disabled = false;
+    }
+}
 function updateLockScreenTime() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -1162,12 +1204,20 @@ function initMail(windowEl) {
 }
 
 function handleMailSubmit(e, container) {
-    e.preventDefault();
-    const nameInput = container.querySelector('#contactName');
-    const emailInput = container.querySelector('#contactEmail');
-    const msgInput = container.querySelector('#contactMessage');
+    if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+    }
 
-    if (!nameInput || !emailInput || !msgInput) return;
+    // Guard container lookup
+    const targetContainer = container || document;
+    const nameInput = targetContainer.querySelector('#contactName');
+    const emailInput = targetContainer.querySelector('#contactEmail');
+    const msgInput = targetContainer.querySelector('#contactMessage');
+
+    if (!nameInput || !emailInput || !msgInput) {
+        showToast('Form Error', 'Contact fields could not be resolved in window layout.', '⚠️');
+        return;
+    }
 
     const n = nameInput.value.trim();
     const em = emailInput.value.trim();
@@ -1400,10 +1450,11 @@ function shutdown() {
 
 function handleFormSubmit(e) { 
     if (e.target && e.target.id === 'contactFormElement') {
-        handleMailSubmit(e, state.openWindows.get('contact') || document);
+        e.preventDefault(); // <-- Catch it immediately here!
+        const contactWin = state.openWindows.get('contact') || document;
+        handleMailSubmit(e, contactWin);
     } 
 }
-
 // ---------- Initialize Systems ----------
 initBoot();
 
